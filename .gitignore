@@ -1,0 +1,56 @@
+# Laravel
+backend/.env
+backend/vendor/
+backend/node_modules/
+backend/storage/app/uploads/
+backend/storage/app/exports/
+backend/storage/app/temp/
+backend/storage/logs/
+backend/.phpunit.result.cache
+backend/bootstrap/cache/
+
+# Python
+ai/venv/
+ai/__pycache__/
+ai/*.pyc
+ai/.env
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# System
+.DS_Store
+Thumbs.db
+*.log
+
+# Uploads & Exports (never commit user data)
+uploads/
+exports/
+temp/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Editors
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# OS
+.DS_Store
+Thumbs.db
