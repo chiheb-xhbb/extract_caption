@@ -1,0 +1,28 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# AutoCaption AI Service – Pinned Requirements
+# Python 3.11 · CUDA 12.x · RTX 2050
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ── FastAPI stack ──────────────────────────────────────────────────────────────
+fastapi==0.137.1
+uvicorn[standard]==0.34.0
+pydantic==2.13.4
+pydantic-settings==2.7.0
+python-multipart==0.0.20
+
+# ── Transcription engine ───────────────────────────────────────────────────────
+faster-whisper==1.1.1
+# Pin ctranslate2 to a version that self-bundles cuDNN 9 on Windows:
+ctranslate2==4.5.1
+
+# ── CUDA 12 runtime DLLs (supplies cublas64_12.dll + cudart64_12.dll) ─────────
+# These wheels ship the DLLs inside site-packages; CUDA Toolkit on host NOT required.
+nvidia-cublas-cu12==12.4.5.8
+nvidia-cuda-runtime-cu12==12.4.127
+
+# ── Remove these if present (CUDA 11 – incompatible with ctranslate2 4.x) ─────
+# pip uninstall -y nvidia-cublas-cu11 nvidia-cuda-runtime-cu11 nvidia-cudnn-cu11
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+certifi>=2024.0.0
+anyio>=4.0.0

@@ -1,0 +1,1 @@
+# AutoCaption AI – schemas package
