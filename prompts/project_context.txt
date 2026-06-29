@@ -1,0 +1,535 @@
+
+# AutoCaption Studio - Project Context
+
+## 1. Project Overview
+
+### Project Name
+
+AutoCaption Studio
+
+### Description
+
+AutoCaption Studio is a professional desktop/web application that automatically generates subtitles from videos using AI, allowing users to edit captions, synchronize them with the video, customize subtitle styles, and export high-quality captioned videos.
+
+The application is inspired by CapCut's subtitle editor but runs entirely locally, ensuring privacy, high performance, and no cloud dependency.
+
+---
+
+# 2. Main Goals
+
+The application should allow users to:
+
+* Upload videos
+* Automatically generate subtitles
+* Edit subtitles
+* Edit word timings
+* Customize subtitle appearance
+* Preview subtitles in real time
+* Export SRT files
+* Export videos with burned subtitles
+* Work completely offline
+
+---
+
+# 3. Tech Stack
+
+## Backend
+
+* Laravel 13
+* PHP 8.3+
+* MySQL
+
+Responsibilities:
+
+* Project management
+* File management
+* API
+* Database
+* Export management
+* Communication with AI service
+
+---
+
+## AI Service
+
+Python
+
+Framework:
+
+FastAPI
+
+Libraries:
+
+* faster-whisper
+* FFmpeg
+* OpenCV (future)
+* CTranslate2
+
+Responsibilities:
+
+* Speech recognition
+* Subtitle generation
+* Language detection
+* Word timestamps
+
+---
+
+## Frontend
+
+React
+
+TypeScript
+
+TailwindCSS
+
+Shadcn UI
+
+React Query
+
+Zustand
+
+Responsibilities:
+
+* User Interface
+* Video Player
+* Subtitle Editor
+* Timeline
+* Export
+
+---
+
+# 4. Folder Structure
+
+```text
+extract_text_app/
+
+backend/
+frontend/
+ai/
+
+uploads/
+exports/
+temp/
+storage/
+
+docs/
+
+README.md
+PROJECT_CONTEXT.md
+```
+
+---
+
+# 5. Database
+
+## Projects
+
+Stores:
+
+* Project information
+* Uploaded video
+* Processing state
+
+---
+
+## Captions
+
+Stores:
+
+* Caption text
+* Start time
+* End time
+* Position
+
+---
+
+## Words
+
+Stores:
+
+* Individual word
+* Word timestamps
+
+---
+
+## Exports
+
+Stores:
+
+* Generated videos
+* SRT
+* Export status
+
+---
+
+# 6. Workflow
+
+```text
+User
+
+↓
+
+Create Project
+
+↓
+
+Upload Video
+
+↓
+
+Laravel stores video
+
+↓
+
+Laravel calls FastAPI
+
+↓
+
+FastAPI extracts audio
+
+↓
+
+Whisper generates captions
+
+↓
+
+JSON returned
+
+↓
+
+Laravel saves captions
+
+↓
+
+React loads captions
+
+↓
+
+User edits
+
+↓
+
+Export
+
+↓
+
+FFmpeg renders final video
+```
+
+---
+
+# 7. Features
+
+## Phase 1
+
+Project Management
+
+* Create Project
+* Delete Project
+* Rename Project
+
+---
+
+## Phase 2
+
+Video Upload
+
+Supported:
+
+* mp4
+* mov
+* avi
+* mkv
+* webm
+
+---
+
+## Phase 3
+
+AI
+
+Whisper
+
+Generate:
+
+* language
+* captions
+* timestamps
+* word timestamps
+
+---
+
+## Phase 4
+
+Caption Editor
+
+Edit:
+
+* text
+* timing
+* merge
+* split
+* delete
+
+---
+
+## Phase 5
+
+Timeline
+
+Drag
+
+Resize
+
+Split
+
+Merge
+
+Zoom
+
+---
+
+## Phase 6
+
+Subtitle Styles
+
+Font
+
+Color
+
+Shadow
+
+Outline
+
+Animation
+
+Position
+
+Templates
+
+---
+
+## Phase 7
+
+Export
+
+Export:
+
+* MP4
+* MOV
+* SRT
+
+---
+
+# 8. API
+
+Laravel
+
+## Projects
+
+POST
+
+```
+/projects
+```
+
+GET
+
+```
+/projects
+```
+
+GET
+
+```
+/projects/{id}
+```
+
+DELETE
+
+```
+/projects/{id}
+```
+
+---
+
+Upload
+
+POST
+
+```
+/projects/{id}/upload
+```
+
+---
+
+Generate
+
+POST
+
+```
+/projects/{id}/transcribe
+```
+
+---
+
+Export
+
+POST
+
+```
+/projects/{id}/export
+```
+
+---
+
+FastAPI
+
+GET
+
+```
+/health
+```
+
+POST
+
+```
+/transcribe
+```
+
+---
+
+# 9. Whisper Configuration
+
+Development
+
+```
+small
+```
+
+GPU
+
+```
+device = cuda
+compute_type = float16
+```
+
+Production
+
+```
+medium
+```
+
+---
+
+# 10. Export
+
+FFmpeg
+
+Responsibilities
+
+* Burn subtitles
+* Compress video
+* Generate preview
+* Generate thumbnail
+
+---
+
+# 11. Future Features
+
+AI Translation
+
+Auto Grammar Correction
+
+Subtitle Templates
+
+Animated Karaoke
+
+Voice Cloning
+
+Speech Translation
+
+Multiple Languages
+
+Cloud Synchronization
+
+Collaboration
+
+AI Rewriting
+
+Automatic Emojis
+
+Automatic Hashtags
+
+TikTok Caption Presets
+
+Instagram Caption Presets
+
+YouTube Caption Presets
+
+---
+
+# 12. Development Rules
+
+Always:
+
+* Keep business logic in Laravel Services
+* Keep controllers thin
+* Use Repository Pattern if needed
+* Use Form Requests for validation
+* Use React Query for API
+* Use Zustand for global state
+* Never call Whisper directly from React
+* Laravel is the gateway between Frontend and AI
+* Store timestamps in decimal(10,3)
+* Generate subtitles as JSON before exporting
+
+---
+
+# 13. MVP Roadmap
+
+### Sprint 1
+
+* Backend
+* Database
+* Upload
+
+---
+
+### Sprint 2
+
+* Whisper Integration
+
+---
+
+### Sprint 3
+
+* Subtitle Editor
+
+---
+
+### Sprint 4
+
+* Video Player
+
+---
+
+### Sprint 5
+
+* Timeline
+
+---
+
+### Sprint 6
+
+* Subtitle Styles
+
+---
+
+### Sprint 7
+
+* Export
+
+---
+
+
