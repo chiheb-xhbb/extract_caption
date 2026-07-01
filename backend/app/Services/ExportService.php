@@ -11,6 +11,7 @@ class ExportService
 {
     public function exportSrt(Project $project): Export
     {
+        $disk = Storage::disk('public');
         $captions = $project->captions()->orderBy('order')->get();
 
         if ($captions->isEmpty()) {
@@ -20,7 +21,7 @@ class ExportService
         $srtContent = $this->generateSrtContent($captions);
         $filename   = 'exports/project_' . $project->id . '_' . time() . '.srt';
 
-        Storage::put($filename, $srtContent);
+        $disk->put($filename, $srtContent);
 
         return Export::create([
             'project_id' => $project->id,
@@ -32,7 +33,9 @@ class ExportService
 
     public function exportVideo(Project $project): Export
     {
-        if (!$project->video_path || !Storage::exists($project->video_path)) {
+        $disk = Storage::disk('public');
+
+        if (!$project->video_path || !$disk->exists($project->video_path)) {
             throw new RuntimeException('Aucune vidéo trouvée pour ce projet.');
         }
 
@@ -45,8 +48,8 @@ class ExportService
         $srtContent = $this->generateSrtContent($captions);
         $srtPath    = storage_path('app/temp/subtitles_' . $project->id . '_' . time() . '.srt');
         $outputName = 'exports/project_' . $project->id . '_final_' . time() . '.mp4';
-        $videoOut   = storage_path('app/' . $outputName);
-        $videoIn    = storage_path('app/' . $project->video_path);
+        $videoOut   = $disk->path($outputName);
+        $videoIn    = $disk->path($project->video_path);
 
         $this->ensureDirectoryExists(dirname($srtPath));
         $this->ensureDirectoryExists(dirname($videoOut));

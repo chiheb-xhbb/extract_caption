@@ -10,12 +10,14 @@ class UploadService
 {
     public function uploadVideo(Project $project, UploadedFile $file): Project
     {
-        if ($project->video_path && Storage::exists($project->video_path)) {
-            Storage::delete($project->video_path);
+        $disk = Storage::disk('public');
+
+        if ($project->video_path && $disk->exists($project->video_path)) {
+            $disk->delete($project->video_path);
         }
 
         $filename = uniqid('video_') . '.' . $file->getClientOriginalExtension();
-        $path     = $file->storeAs('uploads', $filename);
+        $path     = $file->storeAs('uploads', $filename, 'public');
 
         $project->update([
             'video_path' => $path,

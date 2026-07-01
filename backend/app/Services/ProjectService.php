@@ -36,8 +36,10 @@ class ProjectService
 
     public function deleteProject(Project $project): void
     {
-        if ($project->video_path && Storage::exists($project->video_path)) {
-            Storage::delete($project->video_path);
+        $disk = Storage::disk('public');
+
+        if ($project->video_path && $disk->exists($project->video_path)) {
+            $disk->delete($project->video_path);
         }
 
         $project->delete();

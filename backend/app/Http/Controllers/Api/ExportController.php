@@ -26,7 +26,7 @@ class ExportController extends Controller
                 'mp4', 'mov' => $this->exportService->exportVideo($project),
             };
 
-            return response()->json(new ExportResource($export), 201);
+            return (new ExportResource($export))->response()->setStatusCode(201);
 
         } catch (RuntimeException $e) {
             return response()->json([

@@ -26,20 +26,20 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request): JsonResponse
     {
         $project = $this->projectService->createProject($request->validated());
-        return response()->json(new ProjectResource($project), 201);
+        return (new ProjectResource($project))->response()->setStatusCode(201);
     }
 
     public function show(int $id): JsonResponse
     {
         $project = $this->projectService->getProjectWithRelations($id);
-        return response()->json(new ProjectResource($project));
+        return (new ProjectResource($project))->response();
     }
 
     public function update(UpdateProjectRequest $request, int $id): JsonResponse
     {
         $project = Project::findOrFail($id);
         $updated = $this->projectService->updateProject($project, $request->validated());
-        return response()->json(new ProjectResource($updated));
+        return (new ProjectResource($updated))->response();
     }
 
     public function destroy(int $id): JsonResponse

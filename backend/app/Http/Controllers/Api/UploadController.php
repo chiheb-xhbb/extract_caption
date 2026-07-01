@@ -19,6 +19,6 @@ class UploadController extends Controller
     {
         $project = Project::findOrFail($projectId);
         $updated = $this->uploadService->uploadVideo($project, $request->file('video'));
-        return response()->json(new ProjectResource($updated));
+        return (new ProjectResource($updated))->response();
     }
 }

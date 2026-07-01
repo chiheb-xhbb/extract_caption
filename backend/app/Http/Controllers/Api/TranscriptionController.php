@@ -22,7 +22,7 @@ class TranscriptionController extends Controller
 
         try {
             $transcribed = $this->transcriptionService->transcribe($project);
-            return response()->json(new ProjectResource($transcribed));
+            return (new ProjectResource($transcribed))->response();
         } catch (RuntimeException $e) {
             return response()->json([
                 'message' => $e->getMessage(),

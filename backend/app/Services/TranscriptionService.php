@@ -23,7 +23,9 @@ class TranscriptionService
             'language' => $project->language,
         ]);
 
-        if (!$project->video_path || !Storage::exists($project->video_path)) {
+        $disk = Storage::disk('public');
+
+        if (!$project->video_path || !$disk->exists($project->video_path)) {
             throw new RuntimeException('Aucune vidéo trouvée pour ce projet.');
         }
 
@@ -76,7 +78,7 @@ class TranscriptionService
 
     private function callWhisperService(Project $project): array
     {
-        $videoPath = Storage::path($project->video_path);
+        $videoPath = Storage::disk('public')->path($project->video_path);
         $aiUrl     = config('services.ai.url');
 
         if (!file_exists($videoPath)) {

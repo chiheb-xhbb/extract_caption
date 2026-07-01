@@ -14,7 +14,7 @@ class ProjectResource extends JsonResource
             'id'         => $this->id,
             'name'       => $this->name,
             'video_name' => $this->video_name,
-            'video_url'  => $this->video_path ? Storage::url($this->video_path) : null,
+            'video_url'  => $this->video_path ? Storage::disk('public')->url($this->video_path) : null,
             'duration'   => $this->duration,
             'language'   => $this->language,
             'status'     => $this->status,

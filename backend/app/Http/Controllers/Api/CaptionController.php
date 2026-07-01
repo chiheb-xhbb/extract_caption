@@ -30,7 +30,7 @@ class CaptionController extends Controller
         $project = Project::findOrFail($projectId);
         $caption = Caption::where('project_id', $project->id)->findOrFail($captionId);
         $updated = $this->captionService->updateCaption($caption, $request->validated());
-        return response()->json(new CaptionResource($updated));
+        return (new CaptionResource($updated))->response();
     }
 
     public function destroy(int $projectId, int $captionId): JsonResponse
@@ -45,6 +45,6 @@ class CaptionController extends Controller
     {
         $project = Project::findOrFail($projectId);
         $merged  = $this->captionService->mergeCaptions($project, $request->validated('caption_ids'));
-        return response()->json(new CaptionResource($merged));
+        return (new CaptionResource($merged))->response();
     }
 }
