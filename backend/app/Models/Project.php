@@ -11,6 +11,7 @@ class Project extends Model
         'name',
         'video_path',
         'video_name',
+        'thumbnail_path',
         'duration',
         'language',
         'status',

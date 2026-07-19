@@ -1,0 +1,170 @@
+/* ── ExportModal ─────────────────────────────────────────── */
+
+.export-intro {
+  font-size:   13.5px;
+  color:       var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.55;
+}
+
+.export-formats-grid {
+  display:               grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:                   10px;
+}
+
+.export-format-btn {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  gap:             10px;
+  padding:         16px 8px;
+  border-radius:   var(--radius-xl);
+  border:          1.5px solid var(--border);
+  background:      var(--surface-overlay);
+  cursor:          pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background   var(--duration-fast) var(--ease-out),
+    box-shadow   var(--duration-fast) var(--ease-out);
+  position:        relative;
+}
+
+.export-format-btn:hover {
+  border-color: var(--border-strong);
+  background:   var(--surface-hover);
+}
+
+.export-format-btn.selected {
+  border-color: rgba(99,102,241,0.5);
+  background:   var(--primary-muted);
+  box-shadow:   0 0 0 3px rgba(99,102,241,0.12);
+}
+
+.export-format-icon {
+  width:           38px;
+  height:          38px;
+  border-radius:   var(--radius-md);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  background:      var(--background);
+  color:           var(--text-muted);
+  transition:      color var(--duration-fast) var(--ease-out);
+}
+
+.export-format-btn.selected .export-format-icon {
+  color: var(--primary-light);
+}
+
+.export-format-name {
+  font-size:   13px;
+  font-weight: 600;
+  color:       var(--text-primary);
+}
+
+.export-format-desc {
+  font-size:   10.5px;
+  color:       var(--text-muted);
+  text-align:  center;
+  line-height: 1.4;
+}
+
+.export-format-check {
+  position:  absolute;
+  top:       8px;
+  right:     8px;
+  color:     var(--primary-light);
+}
+
+/* ── Footer row ───────────────────────────────────────────── */
+.export-footer {
+  display:         flex;
+  justify-content: flex-end;
+  gap:             8px;
+  margin-top:      20px;
+}
+
+/* ── Exporting / Progress state ───────────────────────────── */
+.export-progress-wrap {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  gap:             20px;
+  padding:         16px 0;
+  text-align:      center;
+  animation:       scale-in var(--duration-base) var(--ease-spring) both;
+}
+
+.export-progress-title {
+  font-size:   14px;
+  font-weight: 600;
+  color:       var(--text-primary);
+}
+
+.export-progress-hint {
+  font-size:  12px;
+  color:      var(--text-muted);
+  margin-top: -12px;
+}
+
+.export-progress-bar-wrap {
+  width:         100%;
+  height:        6px;
+  border-radius: var(--radius-full);
+  background:    var(--surface-overlay);
+  overflow:      hidden;
+}
+
+.export-progress-bar {
+  height:        100%;
+  border-radius: var(--radius-full);
+  background:    linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  transition:    width 0.3s var(--ease-out);
+}
+
+.export-progress-pct {
+  font-family: var(--font-mono);
+  font-size:   12px;
+  color:       var(--text-muted);
+}
+
+/* ── Error state ──────────────────────────────────────────── */
+.export-error-wrap {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  gap:             16px;
+  padding:         16px 0;
+  text-align:      center;
+  animation:       slide-up var(--duration-base) var(--ease-out) both;
+}
+
+.export-error-icon {
+  width:           48px;
+  height:          48px;
+  border-radius:   var(--radius-xl);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  background:      var(--danger-muted);
+  color:           var(--danger);
+}
+
+.export-error-title {
+  font-size:   15px;
+  font-weight: 600;
+  color:       var(--text-primary);
+}
+
+.export-error-msg {
+  font-size: 13px;
+  color:     var(--danger);
+}
+
+.export-error-actions {
+  display: flex;
+  gap:     8px;
+}

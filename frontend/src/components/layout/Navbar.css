@@ -1,0 +1,150 @@
+/* ── Navbar component ────────────────────────────────────── */
+
+.navbar-wrap {
+  width:      100%;
+  display:    flex;
+  justify-content: center;
+  padding:    16px 20px 0;
+  flex-shrink: 0;
+  z-index:    var(--z-sticky);
+  position:   sticky;
+  top:        0;
+}
+
+.navbar {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  width:           100%;
+  max-width:       1400px;
+  height:          52px;
+  border-radius:   var(--radius-xl);
+  padding:         0 12px;
+  position:        relative;
+  background:      var(--surface-glass);
+  border:          1px solid var(--border);
+  box-shadow:      0 8px 32px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.04) inset;
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+}
+
+/* ── Brand ─────────────────────────────────────────────────── */
+.navbar-brand {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  width:       200px;
+  flex-shrink: 0;
+  padding:     0 6px;
+}
+
+.navbar-logo {
+  width:           34px;
+  height:          34px;
+  border-radius:   var(--radius-md);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex-shrink:     0;
+  background:      linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  box-shadow:      0 2px 12px var(--primary-glow);
+  transition:      box-shadow var(--duration-base) var(--ease-out);
+}
+
+.navbar-logo:hover {
+  box-shadow: 0 4px 20px var(--primary-glow);
+}
+
+.navbar-app-name {
+  font-size:      14px;
+  font-weight:    700;
+  letter-spacing: -0.02em;
+  color:          var(--text-primary);
+  white-space:    nowrap;
+}
+
+/* ── Center Nav ────────────────────────────────────────────── */
+.navbar-nav {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex:            1;
+  gap:             2px;
+}
+
+.navbar-nav-link {
+  display:         flex;
+  align-items:     center;
+  gap:             8px;
+  padding:         6px 14px;
+  border-radius:   var(--radius-md);
+  font-size:       13px;
+  font-weight:     500;
+  color:           var(--text-muted);
+  text-decoration: none;
+  transition:
+    color       var(--duration-fast) var(--ease-out),
+    background  var(--duration-fast) var(--ease-out);
+  position:        relative;
+}
+
+.navbar-nav-link:hover {
+  background: var(--surface-hover);
+  color:      var(--text-primary);
+}
+
+.navbar-nav-link.active {
+  background: var(--primary-muted);
+  color:      var(--primary-light);
+}
+
+.navbar-nav-link.active::after {
+  content:         '';
+  position:        absolute;
+  bottom:          -1px;
+  left:            50%;
+  transform:       translateX(-50%);
+  width:           20px;
+  height:          2px;
+  border-radius:   var(--radius-full);
+  background:      var(--primary);
+  box-shadow:      0 0 8px var(--primary-glow);
+}
+
+.navbar-nav-icon {
+  flex-shrink: 0;
+  transition:  transform var(--duration-fast) var(--ease-out);
+}
+
+.navbar-nav-link:hover .navbar-nav-icon {
+  transform: scale(1.1);
+}
+
+/* ── Right Actions ─────────────────────────────────────────── */
+.navbar-actions {
+  display:         flex;
+  align-items:     center;
+  justify-content: flex-end;
+  gap:             6px;
+  width:           200px;
+  flex-shrink:     0;
+  padding:         0 6px;
+}
+
+.navbar-icon-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           32px;
+  height:          32px;
+  border-radius:   var(--radius-md);
+  color:           var(--text-muted);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color      var(--duration-fast) var(--ease-out);
+}
+
+.navbar-icon-btn:hover {
+  background: var(--surface-hover);
+  color:      var(--text-primary);
+}

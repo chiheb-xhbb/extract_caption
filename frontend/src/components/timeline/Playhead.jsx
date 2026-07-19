@@ -1,18 +1,18 @@
-import { memo } from 'react'
 import { usePlayerStore } from '@/store/playerStore'
+import './Timeline.css'
 
-export const Playhead = memo(function Playhead({ timeToPx }) {
+export function Playhead({ timeToPx }) {
   const currentTime = usePlayerStore((s) => s.currentTime)
-  
+  const x = timeToPx(currentTime)
+
   return (
-    <div 
-      className="absolute top-0 bottom-0 z-20 pointer-events-none"
-      style={{ left: timeToPx(currentTime) }}
+    <div
+      className="playhead"
+      style={{ left: x }}
+      aria-hidden="true"
     >
-      <div className="w-0.5 h-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.5)] flex flex-col items-center">
-        {/* Playhead thumb handle (top) */}
-        <div className="absolute top-0 -mt-1 w-3 h-3 bg-white rounded-sm pointer-events-auto cursor-ew-resize" />
-      </div>
+      <div className="playhead-cap" />
+      <div className="playhead-line" />
     </div>
   )
-})
+}

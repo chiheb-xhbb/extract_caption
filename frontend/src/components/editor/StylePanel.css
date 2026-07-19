@@ -1,0 +1,185 @@
+/* ── StylePanel ──────────────────────────────────────────── */
+
+.style-panel {
+  display:     flex;
+  flex-direction: column;
+  height:      100%;
+  overflow-y:  auto;
+  background:  var(--background);
+}
+
+.style-panel-content {
+  padding:    16px;
+  display:    flex;
+  flex-direction: column;
+  gap:        20px;
+}
+
+.style-section {
+  display:        flex;
+  flex-direction: column;
+  gap:            10px;
+}
+
+.style-section-label {
+  font-size:      10px;
+  font-weight:    600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color:          var(--text-muted);
+  padding-bottom: 2px;
+}
+
+/* ── Presets grid ─────────────────────────────────────────── */
+.style-presets-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   8px;
+}
+
+.style-preset-btn {
+  height:        36px;
+  border-radius: var(--radius-md);
+  border:        1px solid var(--border);
+  font-size:     12.5px;
+  font-weight:   500;
+  color:         var(--text-secondary);
+  background:    transparent;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background   var(--duration-fast) var(--ease-out),
+    color        var(--duration-fast) var(--ease-out);
+}
+
+.style-preset-btn:hover {
+  border-color: var(--border-strong);
+  background:   var(--surface-hover);
+}
+
+.style-preset-btn.active {
+  border-color: rgba(99,102,241,0.4);
+  background:   var(--primary-muted);
+  color:        var(--primary-light);
+}
+
+/* ── Select ───────────────────────────────────────────────── */
+.style-select {
+  width:         100%;
+  height:        34px;
+  padding:       0 10px;
+  border-radius: var(--radius-md);
+  border:        1px solid var(--border);
+  background:    var(--surface-overlay);
+  color:         var(--text-primary);
+  font-size:     13px;
+  font-family:   var(--font-sans);
+  outline:       none;
+  cursor:        pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out);
+  appearance:    none;
+  -webkit-appearance: none;
+}
+
+.style-select:hover  { border-color: var(--border-strong); }
+.style-select:focus  { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-muted); }
+
+/* ── Toggle buttons row ───────────────────────────────────── */
+.style-toggle-row {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+}
+
+.style-toggle-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  height:          32px;
+  padding:         0 10px;
+  border-radius:   var(--radius-md);
+  border:          1px solid var(--border);
+  font-size:       12px;
+  font-weight:     500;
+  color:           var(--text-secondary);
+  background:      transparent;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background   var(--duration-fast) var(--ease-out),
+    color        var(--duration-fast) var(--ease-out);
+}
+
+.style-toggle-btn:hover {
+  background:   var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+.style-toggle-btn.active {
+  background:   var(--primary-muted);
+  border-color: rgba(99,102,241,0.4);
+  color:        var(--primary-light);
+}
+
+/* ── Color row ────────────────────────────────────────────── */
+.style-color-row {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         8px 10px;
+  border-radius:   var(--radius-md);
+  background:      var(--surface-overlay);
+  border:          1px solid var(--border);
+}
+
+.style-color-label {
+  font-size:   12.5px;
+  color:       var(--text-secondary);
+}
+
+.style-color-right {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+}
+
+.style-color-hex {
+  font-family: var(--font-mono);
+  font-size:   11px;
+  color:       var(--text-muted);
+}
+
+.style-color-input {
+  width:         28px;
+  height:        28px;
+  border-radius: var(--radius-md);
+  border:        1px solid var(--border);
+  padding:       2px;
+  cursor:        pointer;
+}
+
+/* ── Preview box ──────────────────────────────────────────── */
+.style-preview {
+  position:           relative;
+  height:             72px;
+  border-radius:      var(--radius-lg);
+  border:             1px solid var(--border);
+  overflow:           hidden;
+  display:            flex;
+  align-items:        flex-end;
+  justify-content:    center;
+  padding:            12px;
+  background:         var(--surface-overlay);
+  background-image:
+    linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255,255,255,0.03) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.03) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.03) 75%);
+  background-size:    16px 16px;
+}
+
+.style-preview-text {
+  max-width:  100%;
+  text-align: center;
+  padding:    3px 12px;
+  border-radius: var(--radius-sm);
+}

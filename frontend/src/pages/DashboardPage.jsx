@@ -10,6 +10,7 @@ import { DeleteProjectDialog } from '@/components/projects/DeleteProjectDialog'
 import { useProjects } from '@/hooks/useProjects'
 import { APP_NAME, QUERY_KEYS } from '@/config/constants'
 import { ROUTES } from '@/config/routes'
+import './Dashboard.css'
 
 export default function DashboardPage() {
   const navigate = useNavigate()
@@ -18,14 +19,9 @@ export default function DashboardPage() {
   const [search, setSearch]                   = useState('')
 
   const {
-    projects,
-    isLoading,
-    isError,
-    createProject,
-    isCreating,
-    deleteProject,
-    isDeleting,
-    deletingId,
+    projects, isLoading, isError,
+    createProject, isCreating,
+    deleteProject, isDeleting, deletingId,
   } = useProjects()
 
   const pendingDeleteProject = projects.find((p) => p.id === pendingDeleteId)
@@ -38,9 +34,7 @@ export default function DashboardPage() {
 
   const handleCreate = useCallback(async (formData) => {
     const newProject = await createProject(formData)
-    if (newProject?.id) {
-      navigate(ROUTES.editor(newProject.id))
-    }
+    if (newProject?.id) navigate(ROUTES.editor(newProject.id))
     return newProject
   }, [createProject, navigate])
 
@@ -53,33 +47,31 @@ export default function DashboardPage() {
   }, [pendingDeleteId, deleteProject])
 
   return (
-    <div className="flex flex-col gap-8 p-8 max-w-screen-2xl mx-auto w-full animate-fade-in">
+    <div className="dashboard">
 
       {/* Header */}
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
-            Projects
-          </h1>
-          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+      <div className="dashboard-header">
+        <div className="dashboard-title-group">
+          <h1 className="dashboard-title">Projects</h1>
+          <p className="dashboard-subtitle">
             {isLoading
               ? 'Loading…'
               : `${projects.length} project${projects.length !== 1 ? 's' : ''}`}
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="dashboard-actions">
           {projects.length > 0 && (
             <Input
               placeholder="Search projects…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              leftIcon={<Search className="w-3.5 h-3.5" />}
+              leftIcon={<Search width={13} height={13} />}
               containerClassName="w-52"
             />
           )}
-          <Button onClick={() => setShowCreate(true)}>
-            <Plus className="w-4 h-4" />
+          <Button onClick={() => setShowCreate(true)} size="sm">
+            <Plus width={14} height={14} />
             New Project
           </Button>
         </div>
@@ -87,15 +79,8 @@ export default function DashboardPage() {
 
       {/* Error state */}
       {isError && !isLoading && (
-        <div
-          className="flex items-center gap-3 px-4 py-3 rounded-xl border text-sm animate-slide-up"
-          style={{
-            background:  'var(--color-danger-muted)',
-            borderColor: 'rgba(239,68,68,0.2)',
-            color:       'var(--color-danger)',
-          }}
-        >
-          <AlertCircle className="w-4 h-4 shrink-0" />
+        <div className="dashboard-error">
+          <AlertCircle className="dashboard-error-icon" width={15} height={15} />
           Failed to load projects. Check your connection and try again.
         </div>
       )}
@@ -106,7 +91,7 @@ export default function DashboardPage() {
           {!isLoading && filtered.length === 0 ? (
             <div className="flex-1 flex items-center justify-center min-h-[40vh]">
               <EmptyState
-                icon={<FolderOpen className="w-7 h-7" />}
+                icon={<FolderOpen width={26} height={26} />}
                 title={search ? 'No matching projects' : 'No projects yet'}
                 description={
                   search
@@ -116,7 +101,7 @@ export default function DashboardPage() {
                 action={
                   !search && (
                     <Button onClick={() => setShowCreate(true)} size="sm">
-                      <Plus className="w-4 h-4" />
+                      <Plus width={14} height={14} />
                       New Project
                     </Button>
                   )

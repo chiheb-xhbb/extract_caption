@@ -1,0 +1,97 @@
+/* ── Input component ─────────────────────────────────────── */
+
+.input-root {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+}
+
+.input-label {
+  font-size:   12px;
+  font-weight: 500;
+  color:       var(--text-secondary);
+  line-height: 1;
+}
+
+.input-wrapper {
+  position:    relative;
+  display:     flex;
+  align-items: center;
+}
+
+.input-icon-left,
+.input-icon-right {
+  position:    absolute;
+  top:         50%;
+  transform:   translateY(-50%);
+  display:     flex;
+  align-items: center;
+  color:       var(--text-muted);
+  pointer-events: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.input-icon-left  { left:  12px; }
+.input-icon-right { right: 12px; }
+
+.input-field {
+  width:         100%;
+  height:        36px;
+  border:        1px solid var(--border);
+  border-radius: var(--radius-md);
+  background:    var(--surface-overlay);
+  color:         var(--text-primary);
+  font-size:     13.5px;
+  font-family:   var(--font-sans);
+  outline:       none;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow   var(--duration-fast) var(--ease-out),
+    background   var(--duration-fast) var(--ease-out);
+}
+
+.input-field::placeholder {
+  color: var(--text-disabled);
+}
+
+.input-field:focus {
+  border-color: var(--primary);
+  box-shadow:   0 0 0 3px var(--primary-muted);
+}
+
+.input-field:hover:not(:focus):not(:disabled) {
+  border-color: var(--border-strong);
+}
+
+.input-field:disabled {
+  opacity: 0.5;
+  cursor:  not-allowed;
+}
+
+.input-field.has-left  { padding-left:  38px; }
+.input-field.has-right { padding-right: 38px; }
+
+.input-field:not(.has-left)  { padding-left:  12px; }
+.input-field:not(.has-right) { padding-right: 12px; }
+
+.input-field.error {
+  border-color: var(--danger);
+}
+
+.input-field.error:focus {
+  box-shadow: 0 0 0 3px var(--danger-muted);
+}
+
+.input-helper {
+  font-size: 11.5px;
+  color:     var(--text-muted);
+}
+
+.input-helper.error {
+  color: var(--danger);
+}
+
+/* Focus shifts icon color too */
+.input-wrapper:focus-within .input-icon-left {
+  color: var(--text-secondary);
+}

@@ -8,25 +8,22 @@ import { TimelineCaptionBlock } from '@/components/timeline/TimelineCaptionBlock
 import { Playhead } from '@/components/timeline/Playhead'
 import { usePlayerStore } from '@/store/playerStore'
 import { cn } from '@/lib/cn'
+import './Timeline.css'
 
 export function Timeline({ projectId }) {
-  const containerRef = useRef(null)
-  const snapEnabled = useTimelineStore((s) => s.snapEnabled)
-  const toggleSnap = useTimelineStore((s) => s.toggleSnap)
-  const zoomIn = useTimelineStore((s) => s.zoomIn)
-  const zoomOut = useTimelineStore((s) => s.zoomOut)
+  const containerRef  = useRef(null)
+  const snapEnabled   = useTimelineStore((s) => s.snapEnabled)
+  const toggleSnap    = useTimelineStore((s) => s.toggleSnap)
+  const zoomIn        = useTimelineStore((s) => s.zoomIn)
+  const zoomOut       = useTimelineStore((s) => s.zoomOut)
   const setScrollLeft = useTimelineStore((s) => s.setScrollLeft)
 
   const { captions } = useCaptions(projectId)
-  const duration = usePlayerStore((s) => s.duration)
+  const duration      = usePlayerStore((s) => s.duration)
   const { timeToPx, pxToTime, handleBlockDragEnd, handleBlockResizeEnd } = useTimeline(projectId)
 
-  // Track scroll position in store
-  const handleScroll = (e) => {
-    setScrollLeft(e.target.scrollLeft)
-  }
+  const handleScroll = (e) => setScrollLeft(e.target.scrollLeft)
 
-  // Wheel to zoom (cmd/ctrl + wheel)
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -42,64 +39,41 @@ export function Timeline({ projectId }) {
   }, [zoomIn, zoomOut])
 
   return (
-    <div className="flex flex-col h-full w-full relative">
+    <div className="timeline-root">
 
       {/* Toolbar */}
-      <div
-        className="absolute top-3 right-4 flex items-center gap-1 rounded-lg p-1 border animate-fade-in"
-        style={{
-          background: 'var(--color-bg-glass)',
-          borderColor: 'var(--color-border)',
-          zIndex: 'var(--z-above)',
-        }}
-      >
+      <div className="timeline-toolbar">
         <button
           onClick={toggleSnap}
-          className={cn(
-            'flex items-center justify-center w-7 h-7 rounded-md transition-colors',
-            snapEnabled
-              ? 'bg-[var(--color-primary-muted)] text-[var(--color-primary-light)]'
-              : 'text-[var(--color-text-muted)] hover:bg-white/10 hover:text-[var(--color-text-secondary)]',
-          )}
-          title="Toggle Snap to Grid (0.1s)"
+          className={cn('timeline-toolbar-btn', snapEnabled && 'active')}
+          title="Toggle snap to grid (0.1s)"
         >
-          <Magnet className="w-3.5 h-3.5" />
+          <Magnet width={13} height={13} />
         </button>
-
-        <div className="w-px h-4 mx-0.5" style={{ background: 'var(--color-border-strong)' }} />
-
-        <button
-          onClick={zoomOut}
-          className="flex items-center justify-center w-7 h-7 rounded-md transition-colors text-[var(--color-text-muted)] hover:bg-white/10 hover:text-[var(--color-text-secondary)]"
-          title="Zoom Out"
-        >
-          <ZoomOut className="w-3.5 h-3.5" />
+        <div className="timeline-toolbar-divider" />
+        <button onClick={zoomOut} className="timeline-toolbar-btn" title="Zoom out">
+          <ZoomOut width={13} height={13} />
         </button>
-
-        <button
-          onClick={zoomIn}
-          className="flex items-center justify-center w-7 h-7 rounded-md transition-colors text-[var(--color-text-muted)] hover:bg-white/10 hover:text-[var(--color-text-secondary)]"
-          title="Zoom In"
-        >
-          <ZoomIn className="w-3.5 h-3.5" />
+        <button onClick={zoomIn} className="timeline-toolbar-btn" title="Zoom in">
+          <ZoomIn width={13} height={13} />
         </button>
       </div>
 
       {/* Track Container */}
       <div
         ref={containerRef}
-        className="flex-1 overflow-x-auto overflow-y-hidden relative custom-scrollbar-timeline"
+        className="timeline-track-container"
         onScroll={handleScroll}
       >
         <div
-          className="relative h-full"
+          className="timeline-track-inner"
           style={{ width: Math.max(timeToPx(duration || 0) + 200, window.innerWidth) }}
         >
           <TimelineRuler duration={duration} timeToPx={timeToPx} />
           <Playhead timeToPx={timeToPx} />
 
-          <div className="relative w-full h-full pt-6">
-            {captions.map(c => (
+          <div className="timeline-captions-lane">
+            {captions.map((c) => (
               <TimelineCaptionBlock
                 key={c.id}
                 caption={c}

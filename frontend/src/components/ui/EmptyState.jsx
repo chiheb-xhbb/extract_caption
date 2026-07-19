@@ -1,4 +1,5 @@
 import { cn } from '@/lib/cn'
+import './EmptyState.css'
 
 /**
  * @param {{
@@ -11,42 +12,22 @@ import { cn } from '@/lib/cn'
  */
 export function EmptyState({ icon, title, description, action, className }) {
   return (
-    <div
-      className={cn(
-        'flex flex-col items-center justify-center text-center gap-4 p-8 select-none',
-        className,
-      )}
-    >
+    <div className={cn('empty-state', className)}>
       {icon && (
-        <div
-          className="relative flex items-center justify-center w-14 h-14 rounded-2xl"
-          style={{
-            background: 'var(--color-bg-overlay)',
-            border: '1px solid var(--color-border)',
-            color: 'var(--color-text-muted)',
-          }}
-        >
-          {/* Soft glow ring */}
-          <div
-            className="absolute inset-0 rounded-2xl"
-            style={{ boxShadow: '0 0 24px rgba(99,102,241,0.1)' }}
-          />
+        <div className="empty-state-icon-wrap">
+          <div className="empty-state-icon-halo" />
           {icon}
         </div>
       )}
 
-      <div className="space-y-1.5 max-w-[240px]">
-        <h3 className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-          {title}
-        </h3>
+      <div className="empty-state-copy">
+        <h3 className="empty-state-title">{title}</h3>
         {description && (
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-            {description}
-          </p>
+          <p className="empty-state-description">{description}</p>
         )}
       </div>
 
-      {action && <div className="mt-1">{action}</div>}
+      {action && <div className="empty-state-action">{action}</div>}
     </div>
   )
 }

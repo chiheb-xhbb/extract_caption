@@ -8,16 +8,14 @@ import { DeleteCaptionDialog } from '@/components/captions/DeleteCaptionDialog'
 import { CaptionRowSkeleton } from '@/components/ui/Skeleton'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Input } from '@/components/ui/Input'
+import './CaptionItem.css'
 
-/**
- * @param {{ projectId: number|string }} props
- */
 export function CaptionList({ projectId }) {
   const { captions, isLoading, isError, deleteCaption, isDeleting } = useCaptions(projectId)
   const { activeCaption } = useCaptionSync(captions)
-  const { editCaption } = useEditCaption(projectId)
+  const { editCaption }   = useEditCaption(projectId)
   const [deletingId, setDeletingId] = useState(null)
-  const [search, setSearch] = useState('')
+  const [search, setSearch]         = useState('')
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
@@ -38,7 +36,7 @@ export function CaptionList({ projectId }) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="caption-list">
         {Array.from({ length: 12 }).map((_, i) => (
           <CaptionRowSkeleton key={i} />
         ))}
@@ -48,7 +46,7 @@ export function CaptionList({ projectId }) {
 
   if (isError) {
     return (
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="caption-list" style={{ alignItems:'center', justifyContent:'center' }}>
         <EmptyState
           title="Failed to load captions"
           description="Check your connection and try refreshing."
@@ -59,9 +57,9 @@ export function CaptionList({ projectId }) {
 
   if (captions.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center">
+      <div className="caption-list" style={{ alignItems:'center', justifyContent:'center' }}>
         <EmptyState
-          icon={<FileText className="w-6 h-6" />}
+          icon={<FileText width={22} height={22} />}
           title="No captions yet"
           description="Transcribe the video to generate captions."
         />
@@ -70,24 +68,21 @@ export function CaptionList({ projectId }) {
   }
 
   return (
-    <>
-      {/* Search */}
+    <div className="caption-list">
       {captions.length > 4 && (
-        <div className="px-3 py-2 border-b shrink-0" style={{ borderColor: 'var(--color-border)' }}>
+        <div className="caption-search-bar">
           <Input
             placeholder="Search captions…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            leftIcon={<Search className="w-3 h-3" />}
+            leftIcon={<Search width={12} height={12} />}
           />
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="caption-scroll">
         {filtered.length === 0 ? (
-          <div className="p-4 text-center text-xs" style={{ color: 'var(--color-text-muted)' }}>
-            No captions match "{search}"
-          </div>
+          <p className="caption-empty">No captions match "{search}"</p>
         ) : (
           filtered.map((caption, index) => (
             <CaptionItem
@@ -108,6 +103,6 @@ export function CaptionList({ projectId }) {
         onConfirm={handleDeleteConfirm}
         isLoading={isDeleting}
       />
-    </>
+    </div>
   )
 }

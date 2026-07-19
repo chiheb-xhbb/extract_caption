@@ -1,0 +1,262 @@
+/* ── VideoPlayer ─────────────────────────────────────────── */
+
+.video-player-root {
+  position:   relative;
+  display:    flex;
+  flex-direction: column;
+  overflow:   hidden;
+  background: #000;
+}
+
+.video-player-root video {
+  flex:       1;
+  width:      100%;
+  min-height: 0;
+  object-fit: contain;
+  display:    block;
+}
+
+.video-player-overlay {
+  position:        absolute;
+  inset:           0;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  pointer-events:  none;
+  z-index:         10;
+}
+
+.video-buffering-overlay {
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.video-error-overlay {
+  flex-direction: column;
+  gap:            12px;
+  background:     rgba(0, 0, 0, 0.80);
+  text-align:     center;
+  padding:        24px;
+}
+
+.video-error-icon-wrap {
+  width:           48px;
+  height:          48px;
+  border-radius:   var(--radius-xl);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  background:      var(--danger-muted);
+  color:           var(--danger);
+}
+
+.video-error-title {
+  font-size:   14px;
+  font-weight: 600;
+  color:       var(--text-primary);
+}
+
+.video-error-msg {
+  font-size: 12px;
+  color:     var(--text-secondary);
+  max-width: 280px;
+}
+
+/* ── Video controls overlay ──────────────────────────────── */
+.video-controls-wrap {
+  position:   absolute;
+  inset-x:    0;
+  bottom:     0;
+  opacity:    0;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.video-player-root:hover .video-controls-wrap {
+  opacity: 1;
+}
+
+/* ── VideoControls ───────────────────────────────────────── */
+
+.video-controls {
+  display:        flex;
+  flex-direction: column;
+  gap:            8px;
+  padding:        24px 14px 12px;
+  background:     linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.55) 60%,
+    transparent 100%
+  );
+}
+
+.video-controls-row {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             4px;
+}
+
+.video-ctrl-left,
+.video-ctrl-right {
+  display:     flex;
+  align-items: center;
+  gap:         2px;
+}
+
+.video-ctrl-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           32px;
+  height:          32px;
+  border-radius:   var(--radius-md);
+  color:           rgba(255,255,255,0.85);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    transform  var(--duration-fast) var(--ease-out);
+}
+
+.video-ctrl-btn:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.video-ctrl-btn:active {
+  transform: scale(0.93);
+}
+
+.video-ctrl-time {
+  font-family:    var(--font-mono);
+  font-size:      11px;
+  color:          rgba(255,255,255,0.6);
+  margin-left:    8px;
+  white-space:    nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.video-ctrl-time span.sep {
+  opacity: 0.4;
+  margin:  0 3px;
+}
+
+/* Speed picker */
+.video-speed-wrap {
+  position: relative;
+}
+
+.video-speed-btn {
+  height:          28px;
+  padding:         0 9px;
+  border-radius:   var(--radius-sm);
+  font-family:     var(--font-mono);
+  font-size:       11px;
+  font-weight:     500;
+  color:           rgba(255,255,255,0.72);
+  transition:      background var(--duration-fast) var(--ease-out);
+}
+
+.video-speed-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.video-speed-dropdown {
+  position:      absolute;
+  bottom:        calc(100% + 8px);
+  right:         0;
+  min-width:     80px;
+  border-radius: var(--radius-lg);
+  border:        1px solid var(--border);
+  background:    var(--surface-elevated);
+  padding:       4px;
+  box-shadow:    var(--shadow-lg);
+  z-index:       var(--z-dropdown);
+  animation:     scale-in var(--duration-fast) var(--ease-spring) both;
+  transform-origin: bottom right;
+}
+
+.video-speed-option {
+  width:         100%;
+  padding:       6px 10px;
+  border-radius: var(--radius-md);
+  font-family:   var(--font-mono);
+  font-size:     12px;
+  text-align:    left;
+  color:         var(--text-secondary);
+  transition:    background var(--duration-fast) var(--ease-out);
+}
+
+.video-speed-option:hover {
+  background: var(--surface-hover);
+}
+
+.video-speed-option.active {
+  color:       var(--primary-light);
+  font-weight: 600;
+}
+
+/* ── SeekBar ─────────────────────────────────────────────── */
+
+.seekbar {
+  position:        relative;
+  height:          16px;
+  display:         flex;
+  align-items:     center;
+  cursor:          pointer;
+}
+
+.seekbar-track {
+  position:      absolute;
+  inset-x:       0;
+  height:        3px;
+  border-radius: var(--radius-full);
+  background:    rgba(255,255,255,0.2);
+  overflow:      hidden;
+}
+
+.seekbar-fill {
+  height:        100%;
+  border-radius: var(--radius-full);
+  background:    var(--primary);
+  transition:    width 0.1s linear;
+}
+
+.seekbar-input {
+  position:  absolute;
+  inset:     0;
+  opacity:   0;
+  cursor:    pointer;
+  height:    100%;
+  width:     100%;
+}
+
+.seekbar:hover .seekbar-track {
+  height: 4px;
+}
+
+/* ── VolumeControl ───────────────────────────────────────── */
+
+.volume-ctrl {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+}
+
+.volume-mute-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           32px;
+  height:          32px;
+  border-radius:   var(--radius-md);
+  color:           rgba(255,255,255,0.8);
+  transition:      background var(--duration-fast) var(--ease-out);
+}
+
+.volume-mute-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.volume-slider {
+  width:   68px;
+  height:  3px;
+  cursor:  pointer;
+}

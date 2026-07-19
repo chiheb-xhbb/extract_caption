@@ -1,0 +1,94 @@
+/* ── EditorLayout ─────────────────────────────────────────── */
+
+.editor-root {
+  display:    flex;
+  flex-direction: column;
+  height:     100dvh;
+  width:      100vw;
+  overflow:   hidden;
+  background: var(--background);
+}
+
+/* ── Central 3-panel row ──────────────────────────────────── */
+.editor-main {
+  display:    flex;
+  flex:       1;
+  min-height: 0;
+  overflow:   hidden;
+}
+
+/* ── Left Panel (Captions) ─────────────────────────────────── */
+.editor-panel-left {
+  display:     flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow:    hidden;
+  background:  var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+/* ── Center Panel (Video) ─────────────────────────────────── */
+.editor-panel-center {
+  flex:        1;
+  min-width:   0;
+  display:     flex;
+  flex-direction: column;
+  background:  #000;
+  position:    relative;
+}
+
+/* ── Right Panel (Style) ──────────────────────────────────── */
+.editor-panel-right {
+  display:     flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow:    hidden;
+  background:  var(--surface);
+  border-left: 1px solid var(--border);
+}
+
+/* ── Bottom Panel (Timeline) ──────────────────────────────── */
+.editor-panel-bottom {
+  display:     flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position:    relative;
+  background:  var(--surface);
+  border-top:  1px solid var(--border);
+}
+
+/* ── Panel header shared ───────────────────────────────────── */
+.editor-panel-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         10px 14px;
+  border-bottom:   1px solid var(--border);
+  flex-shrink:     0;
+  min-height:      40px;
+}
+
+.editor-panel-title {
+  display:     flex;
+  align-items: center;
+  gap:         7px;
+  font-size:   10.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color:       var(--text-muted);
+}
+
+.editor-panel-count {
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  padding:       1px 7px;
+  border-radius: var(--radius-full);
+  background:    var(--surface-overlay);
+  font-size:     10.5px;
+  font-weight:   600;
+  color:         var(--text-secondary);
+  letter-spacing: 0;
+  line-height:   1.8;
+}

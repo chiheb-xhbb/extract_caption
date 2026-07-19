@@ -1,0 +1,182 @@
+/* ============================================================
+   AUTOCAPTION STUDIO — DESIGN TOKENS
+   Single source of truth. Never write raw values elsewhere.
+   ============================================================ */
+
+:root {
+  /* ── Backgrounds ─────────────────────────────────────────── */
+  --background:         #09090b;   /* void — deepest surface */
+  --surface:            #111113;   /* panel backgrounds */
+  --surface-elevated:   #1a1a1f;   /* modals, popovers */
+  --surface-overlay:    #252529;   /* inputs, menus, tooltips */
+  --surface-hover:      rgba(255, 255, 255, 0.04);
+  --surface-active:     rgba(255, 255, 255, 0.07);
+  --surface-glass:      rgba(10, 10, 11, 0.82);
+
+  /* ── Borders ─────────────────────────────────────────────── */
+  --border:             rgba(255, 255, 255, 0.07);
+  --border-strong:      rgba(255, 255, 255, 0.12);
+  --border-focus:       var(--primary);
+  --border-subtle:      rgba(255, 255, 255, 0.04);
+
+  /* ── Primary Accent (Indigo) ─────────────────────────────── */
+  --primary:            #6366f1;
+  --primary-hover:      #4f46e5;
+  --primary-active:     #4338ca;
+  --primary-light:      #818cf8;
+  --primary-muted:      rgba(99, 102, 241, 0.12);
+  --primary-glow:       rgba(99, 102, 241, 0.35);
+
+  /* ── Secondary Accent (Violet) ───────────────────────────── */
+  --accent:             #8b5cf6;
+  --accent-hover:       #7c3aed;
+  --accent-muted:       rgba(139, 92, 246, 0.12);
+
+  /* ── Semantic ────────────────────────────────────────────── */
+  --success:            #22c55e;
+  --success-muted:      rgba(34, 197, 94, 0.12);
+  --success-border:     rgba(34, 197, 94, 0.2);
+
+  --warning:            #f59e0b;
+  --warning-muted:      rgba(245, 158, 11, 0.12);
+  --warning-border:     rgba(245, 158, 11, 0.2);
+
+  --danger:             #ef4444;
+  --danger-hover:       #dc2626;
+  --danger-muted:       rgba(239, 68, 68, 0.12);
+  --danger-border:      rgba(239, 68, 68, 0.2);
+
+  --info:               #38bdf8;
+  --info-muted:         rgba(56, 189, 248, 0.12);
+  --info-border:        rgba(56, 189, 248, 0.2);
+
+  /* ── Text ────────────────────────────────────────────────── */
+  --text-primary:       #f4f4f5;
+  --text-secondary:     #a1a1aa;
+  --text-muted:         #71717a;
+  --text-disabled:      #52525b;
+  --text-inverse:       #09090b;
+
+  /* ── Typography ──────────────────────────────────────────── */
+  --font-sans:   'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono:   'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+
+  /* ── Radii ───────────────────────────────────────────────── */
+  --radius-xs:  4px;
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --radius-xl:  18px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ─────────────────────────────────────────────── */
+  --shadow-xs:   0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-sm:   0 2px 6px rgba(0, 0, 0, 0.6);
+  --shadow-md:   0 6px 20px rgba(0, 0, 0, 0.65);
+  --shadow-lg:   0 14px 36px rgba(0, 0, 0, 0.72);
+  --shadow-xl:   0 28px 72px rgba(0, 0, 0, 0.80);
+  --shadow-glow-sm: 0 0 0 1px var(--primary-glow), 0 0 16px var(--primary-glow);
+  --shadow-glow:    0 0 0 1px var(--primary-glow), 0 0 32px var(--primary-glow);
+
+  /* ── Motion ──────────────────────────────────────────────── */
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-snap:    cubic-bezier(0.22, 1, 0.36, 1);
+
+  --duration-instant: 80ms;
+  --duration-fast:    140ms;
+  --duration-base:    220ms;
+  --duration-slow:    380ms;
+  --duration-lazy:    550ms;
+
+  /* ── Z-Index ─────────────────────────────────────────────── */
+  --z-base:     1;
+  --z-above:    10;
+  --z-sticky:   100;
+  --z-dropdown: 200;
+  --z-overlay:  400;
+  --z-modal:    500;
+  --z-toast:    700;
+  --z-tooltip:  800;
+
+  /* ── Legacy Aliases (for backward compat during migration) ── */
+  --bg-base:              var(--background);
+  --bg-surface:           var(--surface);
+  --bg-elevated:          var(--surface-elevated);
+  --bg-overlay:           var(--surface-overlay);
+  --border-def:           var(--border);
+  --border-subtle:        var(--border-subtle);
+  --accent-col:           var(--primary);
+  --accent-hover-col:     var(--primary-hover);
+  --text-prim:            var(--text-primary);
+  --text-sec:             var(--text-secondary);
+  --text-mut:             var(--text-muted);
+  --success-col:          var(--success);
+  --error-col:            var(--danger);
+  --warning-col:          var(--warning);
+
+  /* Map old token names used across existing components */
+  --color-bg-base:         var(--background);
+  --color-bg-surface:      var(--surface);
+  --color-bg-subtle:       var(--surface);
+  --color-bg-elevated:     var(--surface-elevated);
+  --color-bg-overlay:      var(--surface-overlay);
+  --color-bg-muted:        var(--surface-overlay);
+  --color-bg-glass:        var(--surface-glass);
+  --color-border:          var(--border);
+  --color-border-strong:   var(--border-strong);
+  --color-border-focus:    var(--primary);
+  --color-primary:         var(--primary);
+  --color-primary-hover:   var(--primary-hover);
+  --color-primary-active:  var(--primary-active);
+  --color-primary-light:   var(--primary-light);
+  --color-primary-muted:   var(--primary-muted);
+  --color-primary-glow:    var(--primary-glow);
+  --color-accent:          var(--accent);
+  --color-accent-hover:    var(--accent-hover);
+  --color-accent-muted:    var(--accent-muted);
+  --color-success:         var(--success);
+  --color-success-muted:   var(--success-muted);
+  --color-warning:         var(--warning);
+  --color-warning-muted:   var(--warning-muted);
+  --color-danger:          var(--danger);
+  --color-danger-hover:    var(--danger-hover);
+  --color-danger-muted:    var(--danger-muted);
+  --color-info:            var(--info);
+  --color-info-muted:      var(--info-muted);
+  --color-text-primary:    var(--text-primary);
+  --color-text-secondary:  var(--text-secondary);
+  --color-text-muted:      var(--text-muted);
+  --color-text-disabled:   var(--text-disabled);
+  --color-text-inverse:    var(--text-inverse);
+  --font-sans:             var(--font-sans);
+  --font-mono:             var(--font-mono);
+  --radius-sm:             var(--radius-sm);
+  --radius-md:             var(--radius-md);
+  --radius-lg:             var(--radius-lg);
+  --radius-xl:             var(--radius-xl);
+  --radius-2xl:            var(--radius-2xl);
+  --radius-full:           var(--radius-full);
+  --shadow-xs:             var(--shadow-xs);
+  --shadow-sm:             var(--shadow-sm);
+  --shadow-md:             var(--shadow-md);
+  --shadow-lg:             var(--shadow-lg);
+  --shadow-xl:             var(--shadow-xl);
+  --shadow-glow-sm:        var(--shadow-glow-sm);
+  --shadow-glow:           var(--shadow-glow);
+  --ease-out:              var(--ease-out);
+  --ease-spring:           var(--ease-spring);
+  --ease-in-out:           var(--ease-in-out);
+  --duration-fast:         var(--duration-fast);
+  --duration-base:         var(--duration-base);
+  --duration-slow:         var(--duration-slow);
+  --z-above:               var(--z-above);
+  --z-sticky:              var(--z-sticky);
+  --z-dropdown:            var(--z-dropdown);
+  --z-overlay:             var(--z-overlay);
+  --z-modal:               var(--z-modal);
+  --z-toast:               var(--z-toast);
+  --z-tooltip:             var(--z-tooltip);
+}

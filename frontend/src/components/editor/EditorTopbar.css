@@ -1,0 +1,111 @@
+/* ── EditorTopbar ─────────────────────────────────────────── */
+
+.editor-topbar {
+  height:             48px;
+  min-height:         48px;
+  flex-shrink:        0;
+  display:            flex;
+  align-items:        center;
+  justify-content:    space-between;
+  padding:            0 12px;
+  border-bottom:      1px solid var(--border);
+  background:         var(--surface-glass);
+  backdrop-filter:    blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  position:           relative;
+  z-index:            var(--z-above);
+}
+
+/* ── Left section ──────────────────────────────────────────── */
+.editor-topbar-left {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+}
+
+.editor-back-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           28px;
+  height:          28px;
+  border-radius:   var(--radius-md);
+  color:           var(--text-muted);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color      var(--duration-fast) var(--ease-out);
+  text-decoration: none;
+}
+
+.editor-back-btn:hover {
+  background: var(--surface-hover);
+  color:      var(--text-primary);
+}
+
+.editor-topbar-divider {
+  width:      1px;
+  height:     18px;
+  background: var(--border-strong);
+  flex-shrink: 0;
+}
+
+.editor-brand {
+  font-size:      12.5px;
+  font-weight:    700;
+  letter-spacing: -0.02em;
+  color:          var(--text-primary);
+}
+
+/* ── Center section ────────────────────────────────────────── */
+.editor-topbar-center {
+  position:    absolute;
+  left:        50%;
+  transform:   translateX(-50%);
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+}
+
+.editor-project-name-btn {
+  font-size:      13px;
+  font-weight:    500;
+  color:          var(--text-primary);
+  padding:        3px 8px;
+  border-radius:  var(--radius-sm);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color      var(--duration-fast) var(--ease-out);
+}
+
+.editor-project-name-btn:hover {
+  background: var(--surface-hover);
+}
+
+.editor-project-name-input {
+  font-size:     13px;
+  font-weight:   500;
+  padding:       3px 10px;
+  border-radius: var(--radius-md);
+  border:        1px solid var(--primary);
+  background:    var(--surface-elevated);
+  color:         var(--text-primary);
+  outline:       none;
+  min-width:     160px;
+  box-shadow:    0 0 0 3px var(--primary-muted);
+  transition:    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* ── Right section ─────────────────────────────────────────── */
+.editor-topbar-right {
+  display:     flex;
+  align-items: center;
+  gap:         2px;
+}
+
+.editor-action-divider {
+  width:        1px;
+  height:       16px;
+  background:   var(--border);
+  margin:       0 4px;
+  flex-shrink:  0;
+}

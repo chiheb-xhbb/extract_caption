@@ -5,16 +5,8 @@ import { SubtitleOverlay } from '@/components/video/SubtitleOverlay'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { resolveVideoUrl } from '@/utils/url'
+import './VideoPlayer.css'
 
-/**
- * Native HTML5 video player with custom controls and subtitle overlay.
- *
- * @param {{
- *   src: string,
- *   activeCaption: import('@/types/caption').Caption|null,
- *   className?: string
- * }} props
- */
 export function VideoPlayer({ src, activeCaption, className }) {
   const { videoRef, play, pause, seek, setVolume, toggleFullscreen } = useVideoPlayer()
   const store = usePlayerStore()
@@ -22,12 +14,10 @@ export function VideoPlayer({ src, activeCaption, className }) {
 
   const videoSrc = resolveVideoUrl(src)
 
-  console.log('Video URL:', videoSrc)
-
   if (!videoSrc) {
     return (
-      <div className="flex items-center justify-center h-full bg-[#0a0a0b]">
-        <p className="text-sm text-[#52525b]">No video file attached to this project.</p>
+      <div className={cn('video-player-root', className)} style={{ alignItems:'center', justifyContent:'center' }}>
+        <p style={{ fontSize:13, color:'var(--text-muted)' }}>No video file attached to this project.</p>
       </div>
     )
   }
@@ -35,12 +25,8 @@ export function VideoPlayer({ src, activeCaption, className }) {
   return (
     <div
       data-fullscreen-root=""
-      className={cn(
-        'relative flex flex-col overflow-hidden bg-black group/player',
-        className,
-      )}
+      className={cn('video-player-root', className)}
     >
-      {/* Video element */}
       <video
         ref={videoRef}
         src={videoSrc}
@@ -67,35 +53,29 @@ export function VideoPlayer({ src, activeCaption, className }) {
         }}
       />
 
-      {/* Buffering Overlay */}
+      {/* Buffering */}
       {(!isReady || isBuffering) && !playbackError && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10" style={{ background: 'rgba(0,0,0,0.3)' }}>
-          <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--color-primary)' }} />
+        <div className="video-player-overlay video-buffering-overlay">
+          <Loader2 width={32} height={32} className="animate-spin" style={{ color: 'var(--primary)' }} />
         </div>
       )}
 
-      {/* Error Overlay */}
+      {/* Error */}
       {playbackError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 p-6 text-center" style={{ background: 'var(--color-bg-overlay)' }}>
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-3" style={{ background: 'rgba(239,68,68,0.1)' }}>
-            <AlertCircle className="w-6 h-6" style={{ color: 'var(--color-danger)' }} />
+        <div className="video-player-overlay video-error-overlay">
+          <div className="video-error-icon-wrap">
+            <AlertCircle width={22} height={22} />
           </div>
-          <p className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>Playback Error</p>
-          <p className="text-xs max-w-xs mt-1" style={{ color: 'var(--color-text-secondary)' }}>{playbackError}</p>
+          <p className="video-error-title">Playback Error</p>
+          <p className="video-error-msg">{playbackError}</p>
         </div>
       )}
 
-      {/* Subtitle overlay */}
+      {/* Subtitle */}
       <SubtitleOverlay caption={activeCaption} />
 
-      {/* Custom controls — fade in on hover */}
-      <div
-        className={cn(
-          'absolute inset-x-0 bottom-0',
-          'opacity-0 group-hover/player:opacity-100',
-          'transition-opacity duration-200',
-        )}
-      >
+      {/* Controls */}
+      <div className="video-controls-wrap">
         <VideoControls
           onPlay={play}
           onPause={pause}

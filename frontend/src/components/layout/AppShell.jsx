@@ -1,16 +1,15 @@
 import { Outlet } from 'react-router-dom'
-import Sidebar from '@/components/layout/Sidebar'
+import Navbar from '@/components/layout/Navbar'
+import './AppShell.css'
 
 /**
- * AppShell — root layout for Dashboard and Settings pages.
- * Full-screen flex layout: fixed sidebar + scrollable main content.
+ * Root layout: floating navbar + scrollable main area.
  */
 export default function AppShell() {
   return (
-    <div className="flex h-screen overflow-hidden"
-         style={{ background: 'var(--color-bg-base)' }}>
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto">
+    <div className="app-shell">
+      <Navbar />
+      <main className="app-shell-main">
         <Outlet />
       </main>
     </div>

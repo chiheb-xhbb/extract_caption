@@ -1,0 +1,217 @@
+/* ── ProjectCard ─────────────────────────────────────────── */
+
+.project-card {
+  display:       flex;
+  flex-direction: column;
+  border-radius: var(--radius-xl);
+  border:        1px solid var(--border);
+  background:    var(--surface);
+  overflow:      hidden;
+  box-shadow:    var(--shadow-xs);
+  transition:
+    border-color  var(--duration-base) var(--ease-out),
+    box-shadow    var(--duration-base) var(--ease-out),
+    transform     var(--duration-base) var(--ease-out);
+}
+
+.project-card:hover {
+  border-color: var(--border-strong);
+  box-shadow:   var(--shadow-md);
+  transform:    translateY(-2px);
+}
+
+.project-card.deleting {
+  opacity: 0.35;
+  pointer-events: none;
+  transform: scale(0.96);
+  transition:
+    opacity   var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+
+/* ── Thumbnail ─────────────────────────────────────────────── */
+.project-card-thumb {
+  position:         relative;
+  aspect-ratio:     16 / 9;
+  background:       var(--surface-overlay);
+  overflow:         hidden;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+}
+
+.project-card-thumb img {
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.project-card:hover .project-card-thumb img {
+  transform: scale(1.04);
+}
+
+.project-card-thumb-placeholder {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            8px;
+  color:          var(--text-disabled);
+}
+
+/* Open-in-editor hover overlay */
+.project-card-open-overlay {
+  position:         absolute;
+  inset:            0;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  background:       rgba(0, 0, 0, 0.58);
+  backdrop-filter:  blur(3px);
+  opacity:          0;
+  transition:       opacity var(--duration-base) var(--ease-out);
+  border:           none;
+  cursor:           pointer;
+  width:            100%;
+  padding:          0;
+}
+
+.project-card:hover .project-card-open-overlay {
+  opacity: 1;
+}
+
+.project-card-open-pill {
+  display:       flex;
+  align-items:   center;
+  gap:           7px;
+  padding:       8px 18px;
+  border-radius: var(--radius-md);
+  background:    var(--primary);
+  color:         #fff;
+  font-size:     13px;
+  font-weight:   600;
+  transform:     scale(0.94);
+  transition:    transform var(--duration-base) var(--ease-spring);
+  box-shadow:    0 4px 20px var(--primary-glow);
+}
+
+.project-card:hover .project-card-open-pill {
+  transform: scale(1);
+}
+
+/* Duration badge */
+.project-card-duration {
+  position:       absolute;
+  bottom:         8px;
+  right:          8px;
+  display:        flex;
+  align-items:    center;
+  gap:            4px;
+  padding:        2px 7px;
+  border-radius:  var(--radius-sm);
+  background:     rgba(0, 0, 0, 0.78);
+  color:          rgba(255,255,255,0.9);
+  font-size:      11px;
+  font-weight:    500;
+  font-family:    var(--font-mono);
+  backdrop-filter: blur(4px);
+}
+
+/* ── Body ──────────────────────────────────────────────────── */
+.project-card-body {
+  display:        flex;
+  flex-direction: column;
+  gap:            12px;
+  padding:        14px 16px 16px;
+}
+
+.project-card-title-row {
+  display:     flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap:         8px;
+}
+
+.project-card-name {
+  font-size:      13.5px;
+  font-weight:    600;
+  color:          var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height:    1.3;
+  overflow:       hidden;
+  text-overflow:  ellipsis;
+  white-space:    nowrap;
+  flex:           1;
+}
+
+/* Menu */
+.project-card-menu-wrap {
+  position:    relative;
+  flex-shrink: 0;
+}
+
+.project-card-menu-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           26px;
+  height:          26px;
+  border-radius:   var(--radius-sm);
+  color:           var(--text-muted);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color      var(--duration-fast) var(--ease-out);
+}
+
+.project-card-menu-btn:hover {
+  background: var(--surface-hover);
+  color:      var(--text-primary);
+}
+
+.project-card-dropdown {
+  position:      absolute;
+  right:         0;
+  top:           calc(100% + 6px);
+  width:         148px;
+  border-radius: var(--radius-lg);
+  border:        1px solid var(--border);
+  background:    var(--surface-elevated);
+  padding:       4px;
+  box-shadow:    var(--shadow-lg);
+  z-index:       var(--z-dropdown);
+  animation:     scale-in var(--duration-fast) var(--ease-spring) both;
+  transform-origin: top right;
+}
+
+.project-card-dropdown-item {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  width:         100%;
+  padding:       7px 10px;
+  border-radius: var(--radius-md);
+  font-size:     13px;
+  font-weight:   500;
+  transition:    background var(--duration-fast) var(--ease-out);
+}
+
+.project-card-dropdown-item:hover {
+  background: var(--surface-hover);
+}
+
+.project-card-dropdown-item.danger {
+  color: var(--danger);
+}
+
+/* ── Meta row ──────────────────────────────────────────────── */
+.project-card-meta {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+}
+
+.project-card-date {
+  font-size:   11.5px;
+  color:       var(--text-muted);
+  flex-shrink: 0;
+}

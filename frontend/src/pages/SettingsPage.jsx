@@ -1,4 +1,5 @@
 import { APP_NAME } from '@/config/constants'
+import './Settings.css'
 
 const SETTINGS_SECTIONS = [
   {
@@ -24,53 +25,28 @@ const SETTINGS_SECTIONS = [
   },
 ]
 
-function SectionLabel({ children }) {
-  return (
-    <p className="text-[11px] font-semibold uppercase tracking-wider px-1 mb-3" style={{ color: 'var(--color-text-muted)' }}>
-      {children}
-    </p>
-  )
-}
-
 export default function SettingsPage() {
   return (
-    <div className="p-8 max-w-2xl mx-auto w-full space-y-8 animate-fade-in">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
-          Settings
-        </h1>
-        <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-          Configure application preferences.
-        </p>
+    <div className="settings-page">
+
+      <div className="settings-header">
+        <h1 className="settings-title">Settings</h1>
+        <p className="settings-subtitle">Configure application preferences.</p>
       </div>
 
       {SETTINGS_SECTIONS.map((section) => (
-        <div key={section.title}>
-          <SectionLabel>{section.title}</SectionLabel>
-          <div
-            className="rounded-2xl border divide-y overflow-hidden"
-            style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-elevated)' }}
-          >
+        <div key={section.title} className="settings-section">
+          <p className="settings-section-label">{section.title}</p>
+
+          <div className="settings-group">
             {section.items.map((item) => (
-              <div key={item.label} className="flex items-center justify-between px-5 py-3 gap-4">
-                <label className="text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                  {item.label}
-                </label>
+              <div key={item.label} className="settings-row">
+                <label className="settings-row-label">{item.label}</label>
 
                 {item.readonly ? (
-                  <span className="text-sm font-mono" style={{ color: 'var(--color-text-muted)' }}>
-                    {item.value}
-                  </span>
+                  <span className="settings-row-value">{item.value}</span>
                 ) : item.type === 'select' ? (
-                  <select
-                    defaultValue={item.default}
-                    className="h-8 px-2 rounded-lg border text-sm outline-none transition-all"
-                    style={{
-                      background:  'var(--color-bg-overlay)',
-                      borderColor: 'var(--color-border)',
-                      color:       'var(--color-text-primary)',
-                    }}
-                  >
+                  <select defaultValue={item.default} className="settings-row-select">
                     {item.options.map((o) => (
                       <option key={o}>{o}</option>
                     ))}

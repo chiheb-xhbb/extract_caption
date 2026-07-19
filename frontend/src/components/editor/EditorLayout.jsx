@@ -9,6 +9,7 @@ import { Timeline } from '@/components/timeline/Timeline'
 import { useCaptionSync } from '@/hooks/useCaptionSync'
 import { MessageSquare, Palette } from 'lucide-react'
 import { resolveVideoUrl } from '@/config/constants'
+import './EditorLayout.css'
 
 /**
  * @param {{
@@ -17,7 +18,7 @@ import { resolveVideoUrl } from '@/config/constants'
  * }} props
  */
 export function EditorLayout({ project, onExport }) {
-  const panelSizes = useUIStore((s) => s.panelSizes)
+  const panelSizes   = useUIStore((s) => s.panelSizes)
   const setPanelSize = useUIStore((s) => s.setPanelSize)
 
   const { captions } = useCaptions(project.id)
@@ -25,32 +26,24 @@ export function EditorLayout({ project, onExport }) {
   const videoUrl = resolveVideoUrl(project.video_url)
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden" style={{ background: 'var(--color-bg-base)' }}>
+    <div className="editor-root">
       <EditorTopbar project={project} onExport={onExport} />
 
-      {/* Main Content Area (above timeline) */}
-      <div className="flex flex-1 min-h-0">
+      {/* Main 3-panel row */}
+      <div className="editor-main">
 
-        {/* Left Panel — Captions */}
+        {/* Left — Captions */}
         <div
-          className="flex flex-col shrink-0 overflow-hidden"
-          style={{ width: `${panelSizes.leftPanel}px`, background: 'var(--color-bg-elevated)', borderRight: '1px solid var(--color-border)' }}
+          className="editor-panel-left"
+          style={{ width: `${panelSizes.leftPanel}px` }}
         >
-          {/* Panel header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b shrink-0" style={{ borderColor: 'var(--color-border)' }}>
-            <div className="flex items-center gap-2">
-              <MessageSquare className="w-3.5 h-3.5" style={{ color: 'var(--color-text-muted)' }} />
-              <h3 className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
-                Captions
-              </h3>
+          <div className="editor-panel-header">
+            <div className="editor-panel-title">
+              <MessageSquare width={12} height={12} />
+              Captions
             </div>
             {captions.length > 0 && (
-              <span
-                className="text-xs font-medium px-1.5 py-0.5 rounded"
-                style={{ background: 'var(--color-bg-overlay)', color: 'var(--color-text-secondary)' }}
-              >
-                {captions.length}
-              </span>
+              <span className="editor-panel-count">{captions.length}</span>
             )}
           </div>
           <CaptionList projectId={project.id} />
@@ -58,11 +51,13 @@ export function EditorLayout({ project, onExport }) {
 
         <ResizeHandle
           direction="horizontal"
-          onResize={(delta) => setPanelSize('leftPanel', Math.max(250, Math.min(600, panelSizes.leftPanel + delta)))}
+          onResize={(delta) =>
+            setPanelSize('leftPanel', Math.max(250, Math.min(600, panelSizes.leftPanel + delta)))
+          }
         />
 
-        {/* Center Panel — Video */}
-        <div className="flex-1 min-w-0 flex flex-col bg-black relative">
+        {/* Center — Video */}
+        <div className="editor-panel-center">
           <VideoPlayer
             key={videoUrl}
             src={videoUrl}
@@ -73,19 +68,21 @@ export function EditorLayout({ project, onExport }) {
 
         <ResizeHandle
           direction="horizontal"
-          onResize={(delta) => setPanelSize('rightPanel', Math.max(250, Math.min(500, panelSizes.rightPanel - delta)))}
+          onResize={(delta) =>
+            setPanelSize('rightPanel', Math.max(250, Math.min(500, panelSizes.rightPanel - delta)))
+          }
         />
 
-        {/* Right Panel — Style */}
+        {/* Right — Style */}
         <div
-          className="flex flex-col shrink-0 overflow-hidden"
-          style={{ width: `${panelSizes.rightPanel}px`, borderLeft: '1px solid var(--color-border)' }}
+          className="editor-panel-right"
+          style={{ width: `${panelSizes.rightPanel}px` }}
         >
-          <div className="flex items-center gap-2 px-4 py-3 border-b shrink-0" style={{ borderColor: 'var(--color-border)' }}>
-            <Palette className="w-3.5 h-3.5" style={{ color: 'var(--color-text-muted)' }} />
-            <h3 className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
+          <div className="editor-panel-header">
+            <div className="editor-panel-title">
+              <Palette width={12} height={12} />
               Style
-            </h3>
+            </div>
           </div>
           <StylePanel />
         </div>
@@ -93,17 +90,15 @@ export function EditorLayout({ project, onExport }) {
 
       <ResizeHandle
         direction="vertical"
-        onResize={(delta) => setPanelSize('bottomPanel', Math.max(180, Math.min(600, panelSizes.bottomPanel - delta)))}
+        onResize={(delta) =>
+          setPanelSize('bottomPanel', Math.max(180, Math.min(600, panelSizes.bottomPanel - delta)))
+        }
       />
 
-      {/* Bottom Panel — Timeline */}
+      {/* Bottom — Timeline */}
       <div
-        className="shrink-0 flex flex-col relative"
-        style={{
-          height: `${panelSizes.bottomPanel}px`,
-          background: 'var(--color-bg-elevated)',
-          borderTop: '1px solid var(--color-border)',
-        }}
+        className="editor-panel-bottom"
+        style={{ height: `${panelSizes.bottomPanel}px` }}
       >
         <Timeline projectId={project.id} />
       </div>

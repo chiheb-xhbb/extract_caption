@@ -1,0 +1,74 @@
+/* ── Modal component ─────────────────────────────────────── */
+
+.modal-backdrop {
+  position:   fixed;
+  inset:      0;
+  display:    flex;
+  align-items: center;
+  justify-content: center;
+  padding:    20px;
+  z-index:    var(--z-modal);
+  animation:  fade-in var(--duration-fast) var(--ease-out) both;
+}
+
+.modal-overlay {
+  position:         absolute;
+  inset:            0;
+  background:       rgba(0, 0, 0, 0.7);
+  backdrop-filter:  blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.modal-panel {
+  position:      relative;
+  width:         100%;
+  border-radius: var(--radius-xl);
+  border:        1px solid var(--border);
+  background:    var(--surface-elevated);
+  box-shadow:    var(--shadow-xl);
+  animation:     scale-in-spring var(--duration-base) var(--ease-spring) both;
+}
+
+.modal-panel.sm   { max-width: 420px; }
+.modal-panel.md   { max-width: 560px; }
+.modal-panel.lg   { max-width: 720px; }
+.modal-panel.xl   { max-width: 960px; }
+.modal-panel.full { max-width: 95vw; }
+
+.modal-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         18px 22px 16px;
+  border-bottom:   1px solid var(--border);
+}
+
+.modal-title {
+  font-size:     15px;
+  font-weight:   600;
+  color:         var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.modal-close-btn {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           28px;
+  height:          28px;
+  border-radius:   var(--radius-md);
+  color:           var(--text-muted);
+  background:      transparent;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color      var(--duration-fast) var(--ease-out);
+}
+
+.modal-close-btn:hover {
+  background: var(--surface-hover);
+  color:      var(--text-primary);
+}
+
+.modal-body {
+  padding: 22px;
+}

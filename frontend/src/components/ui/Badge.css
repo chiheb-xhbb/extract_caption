@@ -1,0 +1,70 @@
+/* ── Badge component ─────────────────────────────────────── */
+
+.badge {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           6px;
+  padding:       2px 8px;
+  border-radius: var(--radius-full);
+  font-size:     11px;
+  font-weight:   500;
+  letter-spacing: 0.01em;
+  border:        1px solid transparent;
+  line-height:   1.6;
+  white-space:   nowrap;
+}
+
+/* ── Variants ─────────────────────────────────────────────── */
+.badge-default {
+  background:   var(--surface-overlay);
+  color:        var(--text-secondary);
+  border-color: var(--border);
+}
+
+.badge-success {
+  background:   var(--success-muted);
+  color:        var(--success);
+  border-color: var(--success-border);
+}
+
+.badge-warning {
+  background:   var(--warning-muted);
+  color:        var(--warning);
+  border-color: var(--warning-border);
+}
+
+.badge-danger {
+  background:   var(--danger-muted);
+  color:        var(--danger);
+  border-color: var(--danger-border);
+}
+
+.badge-info {
+  background:   var(--info-muted);
+  color:        var(--info);
+  border-color: var(--info-border);
+}
+
+.badge-primary {
+  background:   var(--primary-muted);
+  color:        var(--primary-light);
+  border-color: rgba(99, 102, 241, 0.22);
+}
+
+.badge-outline {
+  background:   transparent;
+  color:        var(--text-secondary);
+  border-color: var(--border-strong);
+}
+
+/* ── Dot ── */
+.badge-dot {
+  width:         6px;
+  height:        6px;
+  border-radius: var(--radius-full);
+  flex-shrink:   0;
+}
+
+.badge-dot.pulse {
+  animation: dot-pulse 1.8s ease-in-out infinite;
+}
