@@ -2,6 +2,7 @@ import { useRef, useEffect, memo, useState } from 'react'
 import { Trash2, Pencil } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { usePlayerStore } from '@/store/playerStore'
+import { useEditorStore } from '@/store/editorStore'
 import { CaptionInlineEdit } from '@/components/captions/CaptionInlineEdit'
 import './CaptionItem.css'
 
@@ -17,14 +18,16 @@ export const CaptionItem = memo(function CaptionItem({
   caption,
   index,
   isActive,
+  isSelected,
   onDeleteRequest,
   onEdit,
 }) {
   const itemRef    = useRef(null)
   const [isEditing, setIsEditing] = useState(false)
 
-  const requestSeek = usePlayerStore((s) => s.requestSeek)
-  const isPlaying   = usePlayerStore((s) => s.isPlaying)
+  const requestSeek       = usePlayerStore((s) => s.requestSeek)
+  const isPlaying         = usePlayerStore((s) => s.isPlaying)
+  const setSelectedCaption = useEditorStore((s) => s.setSelectedCaption)
 
   useEffect(() => {
     if (isActive && isPlaying && itemRef.current && !isEditing) {
@@ -32,8 +35,16 @@ export const CaptionItem = memo(function CaptionItem({
     }
   }, [isActive, isPlaying, isEditing])
 
+  useEffect(() => {
+    if (isSelected && !isPlaying && itemRef.current && !isEditing) {
+      itemRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }
+  }, [isSelected, isPlaying, isEditing])
+
   const handleClick = () => {
-    if (!isEditing) requestSeek(caption.start)
+    if (isEditing) return
+    setSelectedCaption(caption.id)
+    requestSeek(caption.start)
   }
 
   const handleDoubleClick = (e) => {
@@ -53,16 +64,14 @@ export const CaptionItem = memo(function CaptionItem({
       ref={itemRef}
       onClick={handleClick}
       data-editing={isEditing}
-      className={cn('caption-item', isActive && 'is-active')}
+      className={cn('caption-item', isActive && 'is-active', isSelected && 'is-selected')}
     >
-      {/* Index + timestamps */}
       <div className="caption-meta">
         <span className="caption-index">#{index + 1}</span>
         <span className="caption-time">{formatTime(caption.start)}</span>
         <span className="caption-time">{formatTime(caption.end)}</span>
       </div>
 
-      {/* Text / inline edit */}
       <div className="caption-content" onDoubleClick={handleDoubleClick}>
         {isEditing ? (
           <CaptionInlineEdit
@@ -75,7 +84,6 @@ export const CaptionItem = memo(function CaptionItem({
         )}
       </div>
 
-      {/* Hover actions */}
       {!isEditing && (
         <div className="caption-actions">
           <button

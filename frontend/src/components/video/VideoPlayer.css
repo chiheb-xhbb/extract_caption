@@ -16,6 +16,31 @@
   display:    block;
 }
 
+.subtitle-overlay {
+  position:        absolute;
+  left:            0;
+  right:           0;
+  bottom:          56px;
+  display:         flex;
+  justify-content: center;
+  align-items:     flex-end;
+  padding:         0 24px;
+  pointer-events:  none;
+  z-index:         10;
+}
+
+.subtitle-text {
+  display:       inline-block;
+  max-width:     85%;
+  line-height:   1.4;
+  padding:       5px 14px;
+  border-radius: 4px;
+  text-shadow:   0 1px 4px rgba(0,0,0,0.7);
+  word-break:    break-word;
+  text-align:    center;
+}
+
+
 .video-player-overlay {
   position:        absolute;
   inset:           0;
@@ -64,9 +89,10 @@
 /* ── Video controls overlay ──────────────────────────────── */
 .video-controls-wrap {
   position:   absolute;
-  inset-x:    0;
+  left:       0;
+  right:      0;
   bottom:     0;
-  opacity:    0;
+  opacity:    0.4;
   transition: opacity var(--duration-base) var(--ease-out);
 }
 

@@ -1,6 +1,6 @@
-import { useRef, useState, memo } from 'react'
+import { useRef, useState, memo, useCallback } from 'react'
 import { usePlayerStore } from '@/store/playerStore'
-import { useTimelineStore } from '@/store/timelineStore'
+import { useEditorStore } from '@/store/editorStore'
 import { cn } from '@/lib/cn'
 import './Timeline.css'
 
@@ -8,84 +8,89 @@ export const TimelineCaptionBlock = memo(function TimelineCaptionBlock({
   caption,
   timeToPx,
   pxToTime,
+  duration,
   onDragEnd,
   onResizeEnd,
 }) {
-  const isSelected  = useTimelineStore((s) => s.selectedBlockId === caption.id)
-  const setSelected = useTimelineStore((s) => s.setSelectedBlock)
-  const requestSeek = usePlayerStore((s) => s.requestSeek)
+  const isSelected        = useEditorStore((s) => s.selectedCaptionId === caption.id)
+  const setSelectedCaption = useEditorStore((s) => s.setSelectedCaption)
+  const requestSeek       = usePlayerStore((s) => s.requestSeek)
+  const currentTime       = usePlayerStore((s) => s.currentTime)
 
-  const [dragOffset, setDragOffset] = useState({ left: 0, right: 0 })
-  const isDragging = dragOffset.left !== 0 || dragOffset.right !== 0
+  const [drag, setDrag] = useState({ dl: 0, dr: 0, mode: 'none' })
+  const isDragging = drag.mode !== 'none'
 
-  const startPx    = timeToPx(caption.start) + dragOffset.left
-  const durationPx = timeToPx(caption.end - caption.start) + dragOffset.right - dragOffset.left
+  const isActive = currentTime >= (caption.start ?? 0) && currentTime <= (caption.end ?? 0)
 
-  const handleClick = () => {
+  let startPx = timeToPx(caption.start) + (drag.mode === 'move' || drag.mode === 'left' ? drag.dl : 0)
+  let endPx   = timeToPx(caption.end)
+    + (drag.mode === 'move'  ? drag.dl : 0)
+    + (drag.mode === 'right' ? drag.dr : 0)
+
+  const MIN_WIDTH = 6
+  if (endPx - startPx < MIN_WIDTH) endPx = startPx + MIN_WIDTH
+  const widthPx = endPx - startPx
+
+  const handleClick = useCallback((e) => {
     if (isDragging) return
-    setSelected(caption.id)
+    e.stopPropagation()
+    setSelectedCaption(caption.id)
     requestSeek(caption.start)
-  }
+  }, [isDragging, caption.id, caption.start, setSelectedCaption, requestSeek])
 
-  const handleBodyMouseDown = (e) => {
+  const startDrag = useCallback((e, mode) => {
     e.stopPropagation()
+    e.preventDefault()
     const startX = e.clientX
-    const onMove = (ev) => setDragOffset({ left: ev.clientX - startX, right: ev.clientX - startX })
-    const onUp   = (ev) => {
-      window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('mouseup', onUp)
-      const deltaPx = ev.clientX - startX
-      if (deltaPx !== 0) {
-        onDragEnd(caption.id, caption.start + pxToTime(deltaPx), caption.end - caption.start)
-      }
-      setDragOffset({ left: 0, right: 0 })
-    }
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('mouseup', onUp)
-  }
 
-  const handleResize = (e, edge) => {
-    e.stopPropagation()
-    const startX = e.clientX
     const onMove = (ev) => {
       const delta = ev.clientX - startX
-      if (edge === 'left') {
-        const maxDelta = timeToPx(caption.end - caption.start) - 10
-        setDragOffset((prev) => ({ ...prev, left: Math.min(delta, maxDelta) }))
-      } else {
-        const minDelta = -timeToPx(caption.end - caption.start) + 10
-        setDragOffset((prev) => ({ ...prev, right: Math.max(delta, minDelta) }))
-      }
+      if (mode === 'move')  setDrag({ dl: delta, dr: 0,     mode })
+      if (mode === 'left')  setDrag({ dl: delta, dr: 0,     mode })
+      if (mode === 'right') setDrag({ dl: 0,     dr: delta, mode })
     }
-    const onUp = () => {
+
+    const onUp = (ev) => {
       window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('mouseup', onUp)
-      setDragOffset((curr) => {
-        if (curr.left !== 0 || curr.right !== 0) {
-          onResizeEnd(caption.id, caption.start + pxToTime(curr.left), caption.end + pxToTime(curr.right))
-        }
-        return { left: 0, right: 0 }
-      })
+      window.removeEventListener('mouseup',   onUp)
+      const delta = ev.clientX - startX
+
+      if (mode === 'move')  onDragEnd(caption.id, Math.max(0, caption.start + pxToTime(delta)), caption.end - caption.start)
+      if (mode === 'left')  onResizeEnd(caption.id, Math.max(0, caption.start + pxToTime(delta)), caption.end)
+      if (mode === 'right') onResizeEnd(caption.id, caption.start, Math.min(duration ?? Infinity, caption.end + pxToTime(delta)))
+
+      setDrag({ dl: 0, dr: 0, mode: 'none' })
     }
+
     window.addEventListener('mousemove', onMove)
-    window.addEventListener('mouseup', onUp)
-  }
+    window.addEventListener('mouseup',   onUp)
+  }, [caption, pxToTime, duration, onDragEnd, onResizeEnd])
+
+  const tooNarrow = widthPx < 40
 
   return (
     <div
       className={cn(
-        'timeline-block',
-        isSelected  && 'selected',
-        isDragging  && 'dragging',
+        'tl-block',
+        isSelected && 'selected',
+        isActive   && 'active',
+        isDragging && 'dragging',
+        tooNarrow  && 'narrow',
       )}
-      style={{ left: startPx, width: durationPx }}
+      style={{ left: startPx, width: widthPx }}
       onClick={handleClick}
+      title={caption.text}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(e) }}
+      aria-label={`Caption: ${caption.text}`}
+      aria-selected={isSelected}
     >
-      <div className="timeline-block-resize-left"  onMouseDown={(e) => handleResize(e, 'left')} />
-      <div className="timeline-block-body" onMouseDown={handleBodyMouseDown}>
-        {caption.text}
+      <div className="tl-block-handle tl-block-handle-left"  onMouseDown={(e) => startDrag(e, 'left')}  aria-hidden="true" />
+      <div className="tl-block-body" onMouseDown={(e) => startDrag(e, 'move')}>
+        {!tooNarrow && <span className="tl-block-text">{caption.text}</span>}
       </div>
-      <div className="timeline-block-resize-right" onMouseDown={(e) => handleResize(e, 'right')} />
+      <div className="tl-block-handle tl-block-handle-right" onMouseDown={(e) => startDrag(e, 'right')} aria-hidden="true" />
     </div>
   )
 })

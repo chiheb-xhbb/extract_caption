@@ -1,61 +1,83 @@
 import { create } from 'zustand'
+import { queryClient } from '@/lib/queryClient'
+import { QUERY_KEYS } from '@/config/constants'
+
+const MAX_HISTORY = 50
 
 /**
- * Editor UI state.
- *
- * Responsibilities (UI only — TanStack Query owns server data):
- *  - Which caption is currently selected
- *  - Which caption is being edited inline
- *  - Undo stack of caption IDs → text pairs (undo-ready architecture)
+ * @typedef {{ captionId: number, before: object, after: object }} HistoryEntry
  */
+
+function applyEntry(entry, snapshot, projectId) {
+  const { captionId } = entry
+
+  const captionFields = {}
+  const styleFields   = {}
+
+  for (const [k, v] of Object.entries(snapshot)) {
+    if (k === 'style') {
+      Object.assign(styleFields, v)
+    } else {
+      captionFields[k] = v
+    }
+  }
+
+  if (Object.keys(captionFields).length > 0) {
+    queryClient.setQueryData(QUERY_KEYS.captions(projectId), (old) => {
+      if (!old) return old
+      return old.map((c) => (c.id === captionId ? { ...c, ...captionFields } : c))
+    })
+  }
+
+  if (Object.keys(styleFields).length > 0) {
+    import('@/store/captionStyleStore').then(({ useCaptionStyleStore }) => {
+      useCaptionStyleStore.getState().setStyle(captionId, {
+        ...useCaptionStyleStore.getState().getStyle(captionId),
+        ...styleFields,
+      })
+    })
+  }
+}
+
 export const useEditorStore = create((set, get) => ({
-  /** @type {number|null} */
   selectedCaptionId: null,
-
-  /** @type {number|null} */
-  editingCaptionId: null,
-
-  /** @type {Array<{captionId: number, text: string}>} */
-  undoStack: [],
-
-  /** @type {Array<{captionId: number, text: string}>} */
-  redoStack: [],
+  editingCaptionId:  null,
+  past:   [],
+  future: [],
 
   setSelectedCaption: (id) =>
     set({ selectedCaptionId: id, editingCaptionId: null }),
 
-  setEditingCaption: (id) =>
-    set({ editingCaptionId: id }),
+  setEditingCaption: (id) => set({ editingCaptionId: id }),
+  clearEditing:      ()  => set({ editingCaptionId: null }),
 
-  clearEditing: () =>
-    set({ editingCaptionId: null }),
-
-  /**
-   * Push a text snapshot onto the undo stack before an edit begins.
-   * @param {number} captionId
-   * @param {string} previousText
-   */
-  pushUndo: (captionId, previousText) =>
-    set((state) => ({
-      undoStack: [...state.undoStack, { captionId, text: previousText }].slice(-50),
-      redoStack: [],
+  record: (captionId, before, after) =>
+    set((s) => ({
+      past:   [...s.past, { captionId, before, after }].slice(-MAX_HISTORY),
+      future: [],
     })),
 
-  /**
-   * Pop undo stack and return the previous state.
-   * @returns {{captionId: number, text: string}|null}
-   */
-  popUndo: () => {
-    const { undoStack, redoStack } = get()
-    if (undoStack.length === 0) return null
-    const previous = undoStack[undoStack.length - 1]
-    set({
-      undoStack: undoStack.slice(0, -1),
-      redoStack: [...redoStack, previous],
-    })
-    return previous
+  undo: (projectId) => {
+    const { past, future } = get()
+    if (past.length === 0) return
+    const entry = past[past.length - 1]
+    set({ past: past.slice(0, -1), future: [entry, ...future] })
+    applyEntry(entry, entry.before, projectId)
   },
 
-  clearHistory: () =>
-    set({ undoStack: [], redoStack: [] }),
+  redo: (projectId) => {
+    const { past, future } = get()
+    if (future.length === 0) return
+    const entry = future[0]
+    set({ past: [...past, entry], future: future.slice(1) })
+    applyEntry(entry, entry.after, projectId)
+  },
+
+  clearHistory: () => set({ past: [], future: [] }),
+
+  pushUndo: (captionId, previousText) =>
+    set((s) => ({
+      past:   [...s.past, { captionId, before: { text: previousText }, after: {} }].slice(-MAX_HISTORY),
+      future: [],
+    })),
 }))

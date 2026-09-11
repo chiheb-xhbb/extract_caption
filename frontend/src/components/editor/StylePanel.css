@@ -8,6 +8,19 @@
   background:  var(--background);
 }
 
+.style-panel-empty {
+  flex:            1;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  gap:             10px;
+  color:           var(--text-muted);
+  font-size:       12px;
+  text-align:      center;
+  padding:         24px;
+}
+
 .style-panel-content {
   padding:    16px;
   display:    flex;

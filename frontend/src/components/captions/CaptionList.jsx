@@ -3,6 +3,7 @@ import { FileText, Search } from 'lucide-react'
 import { useCaptions } from '@/hooks/useCaptions'
 import { useCaptionSync } from '@/hooks/useCaptionSync'
 import { useEditCaption } from '@/hooks/useEditCaption'
+import { useEditorStore } from '@/store/editorStore'
 import { CaptionItem } from '@/components/captions/CaptionItem'
 import { DeleteCaptionDialog } from '@/components/captions/DeleteCaptionDialog'
 import { CaptionRowSkeleton } from '@/components/ui/Skeleton'
@@ -14,6 +15,7 @@ export function CaptionList({ projectId }) {
   const { captions, isLoading, isError, deleteCaption, isDeleting } = useCaptions(projectId)
   const { activeCaption } = useCaptionSync(captions)
   const { editCaption }   = useEditCaption(projectId)
+  const selectedCaptionId  = useEditorStore((s) => s.selectedCaptionId)
   const [deletingId, setDeletingId] = useState(null)
   const [search, setSearch]         = useState('')
 
@@ -90,6 +92,7 @@ export function CaptionList({ projectId }) {
               caption={caption}
               index={index}
               isActive={activeCaption?.id === caption.id}
+              isSelected={selectedCaptionId === caption.id}
               onDeleteRequest={setDeletingId}
               onEdit={handleEdit}
             />

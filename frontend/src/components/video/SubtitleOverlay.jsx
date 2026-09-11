@@ -1,34 +1,40 @@
-import { cn } from '@/lib/cn'
+import { useCaptionStyleStore } from '@/store/captionStyleStore'
 
-/**
- * Subtitle overlay rendered on top of the video.
- * Styled with drop-shadow and semi-transparent background for legibility.
- * @param {{ caption: import('@/types/caption').Caption|null }} props
- */
 export function SubtitleOverlay({ caption }) {
+  const getStyle = useCaptionStyleStore((s) => s.getStyle)
+
   if (!caption?.text) return null
+
+  const s = getStyle(caption.id)
+
+  const bgAlpha = Math.round((s.backgroundOpacity / 100) * 255)
+    .toString(16)
+    .padStart(2, '0')
+  const background = s.backgroundOpacity > 0
+    ? `${s.backgroundColor}${bgAlpha}`
+    : 'transparent'
+
+  const alignMap = { left: 'flex-start', center: 'center', right: 'flex-end' }
 
   return (
     <div
-      className="absolute inset-x-0 bottom-16 flex items-end justify-center px-8 pointer-events-none"
-      style={{ zIndex: 10 }}
+      className="subtitle-overlay"
+      style={{ justifyContent: alignMap[s.textAlign] ?? 'center' }}
     >
-      <div
-        className="max-w-[80%] text-center leading-relaxed animate-fade-in"
+      <span
+        className="subtitle-text"
         style={{
-          background: 'rgba(0,0,0,0.65)',
-          color:      '#ffffff',
-          fontSize:   '1rem',
-          fontWeight: 600,
-          padding:    '6px 16px',
-          borderRadius: 8,
-          textShadow: '0 1px 4px rgba(0,0,0,0.8)',
-          backdropFilter: 'blur(2px)',
-          letterSpacing: '0.01em',
+          fontFamily: s.fontFamily,
+          fontSize:   `${s.fontSize}px`,
+          fontWeight: s.fontWeight,
+          fontStyle:  s.fontStyle,
+          color:      s.color,
+          background,
+          textAlign:  s.textAlign,
         }}
       >
         {caption.text}
-      </div>
+      </span>
     </div>
   )
 }

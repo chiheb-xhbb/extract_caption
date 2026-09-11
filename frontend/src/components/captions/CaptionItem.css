@@ -47,16 +47,21 @@
   box-shadow:   0 0 0 1px rgba(99,102,241,0.1) inset;
 }
 
+.caption-item.is-selected:not(.is-active) {
+  background:   rgba(99,102,241,0.06);
+  border-color: rgba(99,102,241,0.22);
+}
+
 .caption-item:not(.is-active):not([data-editing='true']) {
   cursor: pointer;
 }
 
-.caption-item:not(.is-active):hover {
+.caption-item:not(.is-active):not(.is-selected):hover {
   background: var(--surface-hover);
 }
 
-/* Left accent bar for active */
-.caption-item.is-active::before {
+.caption-item.is-active::before,
+.caption-item.is-selected::before {
   content:       '';
   position:      absolute;
   left:          0;
@@ -65,7 +70,14 @@
   width:         2.5px;
   border-radius: var(--radius-full);
   background:    var(--primary);
-  box-shadow:    0 0 8px var(--primary-glow);
+}
+
+.caption-item.is-active::before {
+  box-shadow: 0 0 8px var(--primary-glow);
+}
+
+.caption-item.is-selected:not(.is-active)::before {
+  opacity: 0.5;
 }
 
 /* ── Timestamp column ────────────────────────────────────── */

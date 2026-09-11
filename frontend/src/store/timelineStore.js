@@ -5,19 +5,10 @@ import {
   TIMELINE_MAX_ZOOM,
 } from '@/config/constants'
 
-/**
- * Timeline UI state.
- * Drives the visual representation of captions on the timeline ruler.
- * TanStack Query supplies the caption data; this store controls view state.
- */
 export const useTimelineStore = create((set, get) => ({
   zoom: TIMELINE_DEFAULT_ZOOM,
   snapEnabled: true,
 
-  /** @type {number|null} */
-  selectedBlockId: null,
-
-  /** Horizontal scroll offset in pixels */
   scrollLeft: 0,
 
   setZoom: (zoom) =>
@@ -36,8 +27,6 @@ export const useTimelineStore = create((set, get) => ({
   resetZoom: () => set({ zoom: TIMELINE_DEFAULT_ZOOM }),
 
   toggleSnap: () => set((s) => ({ snapEnabled: !s.snapEnabled })),
-
-  setSelectedBlock: (id) => set({ selectedBlockId: id }),
 
   setScrollLeft: (scrollLeft) => set({ scrollLeft }),
 }))

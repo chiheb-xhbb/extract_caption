@@ -1,235 +1,440 @@
-/* ── Timeline ─────────────────────────────────────────────── */
+/* ============================================================
+   TIMELINE — Professional video-editor timeline
+   Follows the coordinate system:
+     x = (timestamp - 0) * pxPerSec
+     width = (end - start) * pxPerSec
+   ============================================================ */
 
-.timeline-root {
-  display:    flex;
+/* ── Root ────────────────────────────────────────────────── */
+.tl-root {
+  display:        flex;
   flex-direction: column;
-  height:     100%;
-  width:      100%;
-  position:   relative;
+  height:         100%;
+  width:          100%;
+  background:     var(--surface);
+  overflow:       hidden;
+  user-select:    none;
 }
 
-/* ── Toolbar ──────────────────────────────────────────────── */
-.timeline-toolbar {
-  position:      absolute;
-  top:           10px;
-  right:         14px;
-  display:       flex;
-  align-items:   center;
-  gap:           2px;
-  padding:       4px;
-  border-radius: var(--radius-lg);
-  border:        1px solid var(--border);
-  background:    var(--surface-glass);
-  backdrop-filter: blur(12px);
-  z-index:       var(--z-above);
-  box-shadow:    var(--shadow-sm);
-  animation:     fade-in var(--duration-base) var(--ease-out) both;
+/* ── Toolbar ─────────────────────────────────────────────── */
+.tl-toolbar {
+  display:         flex;
+  align-items:     center;
+  gap:             2px;
+  padding:         0 8px;
+  height:          36px;
+  flex-shrink:     0;
+  border-bottom:   1px solid var(--border);
+  background:      var(--surface);
 }
 
-.timeline-toolbar-btn {
+.tl-toolbar-group {
+  display:     flex;
+  align-items: center;
+  gap:         1px;
+}
+
+.tl-toolbar-sep {
+  width:      1px;
+  height:     16px;
+  background: var(--border-strong);
+  margin:     0 5px;
+  flex-shrink: 0;
+}
+
+.tl-btn {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  width:           28px;
-  height:          28px;
-  border-radius:   var(--radius-md);
+  gap:             4px;
+  height:          26px;
+  padding:         0 7px;
+  border-radius:   var(--radius-sm);
   color:           var(--text-muted);
+  font-size:       11px;
+  font-weight:     500;
   transition:
     background var(--duration-fast) var(--ease-out),
     color      var(--duration-fast) var(--ease-out);
+  white-space:     nowrap;
 }
 
-.timeline-toolbar-btn:hover {
+.tl-btn:hover {
   background: var(--surface-hover);
   color:      var(--text-primary);
 }
 
-.timeline-toolbar-btn.active {
+.tl-btn.active {
   background: var(--primary-muted);
   color:      var(--primary-light);
 }
 
-.timeline-toolbar-divider {
-  width:      1px;
-  height:     16px;
-  background: var(--border-strong);
-  margin:     0 2px;
+.tl-btn-label {
+  font-size:   10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
-/* ── Track container ──────────────────────────────────────── */
-.timeline-track-container {
-  flex:        1;
-  overflow-x:  auto;
-  overflow-y:  hidden;
-  position:    relative;
+.tl-zoom-pct {
+  min-width:   42px;
+  font-family: var(--font-mono);
+  font-size:   10.5px;
+  color:       var(--text-secondary);
 }
 
-.timeline-track-inner {
-  position: relative;
-  height:   100%;
+.tl-zoom-pct:hover {
+  color: var(--text-primary);
 }
 
-.timeline-captions-lane {
-  position: relative;
-  width:    100%;
-  height:   100%;
-  padding-top: 28px; /* space for ruler */
-}
-
-/* ── TimelineRuler ────────────────────────────────────────── */
-.timeline-ruler {
-  position:   absolute;
-  top:        0;
-  left:       0;
-  right:      0;
-  height:     26px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  overflow:   hidden;
-  user-select: none;
-}
-
-.timeline-ruler-tick {
-  position:   absolute;
-  top:        0;
+/* ── Body: labels + scrollable area ─────────────────────── */
+.tl-body {
   display:    flex;
+  flex:       1;
+  min-height: 0;
+  overflow:   hidden;
+}
+
+/* ── Left labels column ─────────────────────────────────── */
+.tl-labels {
+  display:        flex;
   flex-direction: column;
-  align-items: center;
+  flex-shrink:    0;
+  border-right:   1px solid var(--border);
+  background:     var(--surface);
+  z-index:        2;
 }
 
-.timeline-ruler-line-major {
-  width:      1px;
-  height:     10px;
-  background: var(--border-strong);
-  margin-top: 16px;
+.tl-label-ruler-spacer {
+  flex-shrink:   0;
+  border-bottom: 1px solid var(--border);
 }
 
-.timeline-ruler-line-minor {
+.tl-label-track {
+  display:        flex;
+  align-items:    center;
+  padding:        0 10px;
+  font-size:      9.5px;
+  font-weight:    700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color:          var(--text-muted);
+  border-bottom:  1px solid var(--border-subtle);
+  flex-shrink:    0;
+}
+
+.tl-label-future {
+  flex:      1;
+  min-height: 0;
+}
+
+/* ── Scrollable track container ─────────────────────────── */
+.tl-track-container {
+  flex:       1;
+  min-width:  0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position:   relative;
+  cursor:     crosshair;
+  /* Custom zero-height scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.tl-track-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tl-track-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tl-track-container::-webkit-scrollbar-thumb {
+  background:    var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+.tl-track-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ── Inner content (the coordinate space) ───────────────── */
+.tl-track-inner {
+  position:   relative;
+  min-height: 100%;
+  min-width:  100%;
+}
+
+/* ── Ruler row ──────────────────────────────────────────── */
+.tl-ruler-row {
+  position:      relative;
+  flex-shrink:   0;
+  border-bottom: 1px solid var(--border);
+  background:    var(--background);
+  overflow:      hidden;
+  pointer-events: none;
+}
+
+/* ── Ruler ticks ────────────────────────────────────────── */
+.tl-ruler {
+  position:    absolute;
+  top:         0;
+  left:        0;
+  height:      100%;
+  overflow:    visible;
+  pointer-events: none;
+}
+
+.tl-ruler-tick {
+  position:  absolute;
+  top:       0;
+  bottom:    0;
+  transform: translateX(-50%);
+}
+
+.tl-ruler-tick.major::after {
+  content:          '';
+  position:         absolute;
+  bottom:           0;
+  left:             50%;
+  transform:        translateX(-50%);
+  width:            1px;
+  height:           10px;
+  background:       var(--border-strong);
+}
+
+.tl-ruler-tick.minor::after {
+  content:    '';
+  position:   absolute;
+  bottom:     0;
+  left:       50%;
+  transform:  translateX(-50%);
   width:      1px;
   height:     5px;
   background: var(--border);
-  margin-top: 21px;
 }
 
-.timeline-ruler-label {
-  position:   absolute;
-  top:        2px;
+.tl-ruler-label {
+  position:    absolute;
+  top:         5px;
+  left:        50%;
+  transform:   translateX(-50%);
   font-family: var(--font-mono);
-  font-size:  9.5px;
-  color:      var(--text-muted);
-  transform:  translateX(-50%);
+  font-size:   9px;
+  font-weight: 500;
+  color:       var(--text-muted);
   white-space: nowrap;
+  line-height: 1;
 }
 
-/* ── Playhead ─────────────────────────────────────────────── */
-.playhead {
+/* End-of-video ruler marker */
+.tl-ruler-end {
   position:    absolute;
   top:         0;
   bottom:      0;
-  pointer-events: none;
-  z-index:     var(--z-above);
+  width:       2px;
+  background:  var(--danger);
+  opacity:     0.5;
   transform:   translateX(-50%);
+  pointer-events: auto;
 }
 
-.playhead-line {
-  width:         1.5px;
-  height:        100%;
-  background:    var(--primary-light);
-  border-radius: var(--radius-full);
-  box-shadow:    0 0 8px var(--primary-glow), 0 0 2px var(--primary);
-  animation:     playhead-glow 3s ease-in-out infinite;
+/* ── Caption track band ─────────────────────────────────── */
+.tl-caption-track {
+  position:      relative;
+  border-bottom: 1px solid var(--border-subtle);
+  overflow:      visible;
+  /* Subtle striped background to reinforce the timeline grid */
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent calc(1px - 1px),
+      rgba(255,255,255,0.015) 0px,
+      rgba(255,255,255,0.015) 1px
+    );
 }
 
-.playhead-cap {
+/* ── Future track area ──────────────────────────────────── */
+.tl-future-track {
+  min-height: 20px;
+  flex:       1;
+  /* leaves architecture room for audio/waveform tracks */
+}
+
+/* ── End-of-video vertical marker (full height) ─────────── */
+.tl-end-marker {
+  position:         absolute;
+  top:              0;
+  bottom:           0;
+  width:            2px;
+  background:       linear-gradient(to bottom, var(--danger) 0%, transparent 100%);
+  opacity:          0.35;
+  transform:        translateX(-50%);
+  pointer-events:   none;
+  z-index:          3;
+}
+
+/* ── Playhead ────────────────────────────────────────────── */
+.tl-playhead {
+  position:        absolute;
+  top:             0;
+  bottom:          0;
+  pointer-events:  none;
+  z-index:         var(--z-above);
+  transform:       translateX(-50%);
+}
+
+.tl-playhead-cap {
+  position:        absolute;
+  top:             0;
+  left:            50%;
+  transform:       translateX(-50%);
+  width:           12px;
+  height:          12px;
+  background:      var(--primary-light);
+  border-radius:   2px 2px 0 0;
+  clip-path:       polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%);
+  cursor:          ew-resize;
+  pointer-events:  all;
+  box-shadow:      0 0 10px var(--primary-glow);
+  transition:      transform var(--duration-fast) var(--ease-out);
+}
+
+.tl-playhead-cap:hover {
+  transform:  translateX(-50%) scale(1.2);
+}
+
+.tl-playhead-line {
   position:      absolute;
-  top:           -1px;
+  top:           10px;       /* starts just below the cap */
   left:          50%;
   transform:     translateX(-50%);
-  width:         9px;
-  height:        9px;
-  border-radius: 2px;
+  width:         1.5px;
+  bottom:        0;
   background:    var(--primary-light);
-  box-shadow:    0 0 8px var(--primary-glow);
-  rotate:        45deg;
+  box-shadow:    0 0 6px var(--primary-glow);
+  opacity:       0.85;
 }
 
-/* ── TimelineCaptionBlock ──────────────────────────────────── */
-.timeline-block {
+/* ── Caption block ───────────────────────────────────────── */
+.tl-block {
   position:      absolute;
-  top:           10px;
-  height:        44px;
-  border-radius: var(--radius-md);
-  border:        1.5px solid rgba(99,102,241,0.35);
-  background:    rgba(99,102,241,0.12);
-  overflow:      hidden;
+  top:           7px;
+  bottom:        7px;
+  border-radius: var(--radius-sm);
+  border:        1.5px solid rgba(99,102,241,0.3);
+  background:    rgba(99,102,241,0.1);
   display:       flex;
-  align-items:   center;
+  align-items:   stretch;
+  overflow:      hidden;
+  min-width:     6px;
+  box-shadow:    0 1px 3px rgba(0,0,0,0.4);
   transition:
     border-color var(--duration-fast) var(--ease-out),
     background   var(--duration-fast) var(--ease-out),
     box-shadow   var(--duration-fast) var(--ease-out);
-  box-shadow:    0 1px 4px rgba(0,0,0,0.4);
-  cursor:        default;
 }
 
-.timeline-block:hover {
-  border-color: rgba(99,102,241,0.6);
-  background:   rgba(99,102,241,0.18);
+.tl-block:hover {
+  border-color: rgba(99,102,241,0.55);
+  background:   rgba(99,102,241,0.16);
 }
 
-.timeline-block.selected {
+.tl-block.selected {
   border-color: var(--primary-light);
-  background:   rgba(99,102,241,0.25);
-  box-shadow:   0 0 0 2px rgba(99,102,241,0.2), 0 2px 8px rgba(0,0,0,0.5);
+  background:   rgba(99,102,241,0.22);
+  box-shadow:   0 0 0 2px rgba(99,102,241,0.25), 0 2px 8px rgba(0,0,0,0.5);
   z-index:      10;
 }
 
-.timeline-block.dragging {
+/* Active = currently playing within this caption's time range */
+.tl-block.active {
+  border-color: var(--primary);
+  background:   rgba(99,102,241,0.2);
+}
+
+.tl-block.dragging {
   cursor:      grabbing;
-  opacity:     1;
   z-index:     20;
   box-shadow:  0 0 0 2px var(--primary), 0 8px 24px rgba(0,0,0,0.6);
   transition:  none;
+  opacity:     0.95;
 }
 
-.timeline-block-body {
+/* ── Block body (text + grab cursor) ────────────────────── */
+.tl-block-body {
   flex:           1;
-  padding:        0 10px;
-  font-size:      11px;
+  display:        flex;
+  align-items:    center;
+  padding:        0 8px;
+  cursor:         grab;
+  min-width:      0;
+  overflow:       hidden;
+}
+
+.tl-block.dragging .tl-block-body {
+  cursor: grabbing;
+}
+
+.tl-block-text {
+  font-size:      10.5px;
   font-weight:    500;
   color:          var(--text-primary);
   white-space:    nowrap;
   overflow:       hidden;
   text-overflow:  ellipsis;
-  height:         100%;
-  display:        flex;
-  align-items:    center;
-  cursor:         grab;
-  user-select:    none;
+  letter-spacing: 0.01em;
+  pointer-events: none;
 }
 
-.timeline-block.dragging .timeline-block-body {
-  cursor: grabbing;
+/* ── Resize handles ─────────────────────────────────────── */
+.tl-block-handle {
+  position:         absolute;
+  top:              0;
+  bottom:           0;
+  width:            7px;
+  cursor:           ew-resize;
+  z-index:          2;
+  opacity:          0;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  transition:       opacity var(--duration-fast) var(--ease-out);
 }
 
-.timeline-block-resize-left,
-.timeline-block-resize-right {
-  position:   absolute;
-  top:        0;
-  width:      8px;
-  height:     100%;
-  cursor:     ew-resize;
-  opacity:    0;
-  background: rgba(255,255,255,0.15);
-  transition: opacity var(--duration-fast) var(--ease-out);
+.tl-block-handle::after {
+  content:       '';
+  width:         2px;
+  height:        55%;
+  border-radius: var(--radius-full);
+  background:    rgba(255,255,255,0.4);
 }
 
-.timeline-block-resize-left  { left:  0; }
-.timeline-block-resize-right { right: 0; }
+.tl-block-handle-left  { left:  0; border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.tl-block-handle-right { right: 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;  }
 
-.timeline-block:hover .timeline-block-resize-left,
-.timeline-block:hover .timeline-block-resize-right,
-.timeline-block.selected .timeline-block-resize-left,
-.timeline-block.selected .timeline-block-resize-right {
+.tl-block:hover .tl-block-handle,
+.tl-block.selected .tl-block-handle {
   opacity: 1;
+}
+
+/* Handle hover state */
+.tl-block-handle:hover::after {
+  background: rgba(255,255,255,0.75);
+}
+
+/* ── Narrow block (< 40px) — no text, just handle ───────── */
+.tl-block.narrow .tl-block-body {
+  padding: 0;
+}
+
+/* ── Focus state (keyboard) ─────────────────────────────── */
+.tl-block:focus-visible {
+  outline:        2px solid var(--primary-light);
+  outline-offset: 1px;
+}
+
+/* ── Block dragging — no pointer on child elements ──────── */
+.tl-block.dragging * {
+  pointer-events: none;
 }

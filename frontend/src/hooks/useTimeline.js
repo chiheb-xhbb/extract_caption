@@ -1,68 +1,81 @@
 import { useCallback } from 'react'
 import { useTimelineStore } from '@/store/timelineStore'
+import { usePlayerStore } from '@/store/playerStore'
 import { useEditCaption } from '@/hooks/useEditCaption'
 import { TIMELINE_BASE_PX_PER_SEC } from '@/config/constants'
 
+const SNAP_UNIT   = 0.1   // snap to nearest 0.1 s
+const MIN_DURATION = 0.1  // minimum caption duration
+
 /**
- * Provides timeline math and block dragging logic.
- * @param {number|string} projectId 
+ * Timeline coordinate math + block interaction handlers.
+ * All time values are in seconds; pixels are derived on the fly.
+ *
+ * @param {number|string} projectId
  */
 export function useTimeline(projectId) {
-  const zoom = useTimelineStore((s) => s.zoom)
+  const zoom        = useTimelineStore((s) => s.zoom)
   const snapEnabled = useTimelineStore((s) => s.snapEnabled)
-  
+  const duration    = usePlayerStore((s) => s.duration)
+
   const { editCaption } = useEditCaption(projectId)
 
-  // Math (1 second = TIMELINE_BASE_PX_PER_SEC * zoom pixels)
-  const timeToPx = useCallback((time) => time * TIMELINE_BASE_PX_PER_SEC * zoom, [zoom])
-  const pxToTime = useCallback((px) => px / (TIMELINE_BASE_PX_PER_SEC * zoom), [zoom])
+  const pxPerSec = TIMELINE_BASE_PX_PER_SEC * zoom
 
-  const snapToTenth = (time) => Math.round(time * 10) / 10
+  /** Convert a timestamp (seconds) to an absolute pixel x-position. */
+  const timeToPx = useCallback((time) => time * pxPerSec, [pxPerSec])
 
-  /**
-   * Called when a block drag finishes
-   * @param {number} captionId 
-   * @param {number} newStartTime 
-   * @param {number} originalDuration 
-   */
-  const handleBlockDragEnd = useCallback((captionId, newStartTime, originalDuration) => {
-    let finalStart = Math.max(0, newStartTime)
-    if (snapEnabled) finalStart = snapToTenth(finalStart)
+  /** Convert a pixel delta to a time delta (in seconds). */
+  const pxToTime = useCallback((px) => px / pxPerSec, [pxPerSec])
 
-    editCaption({
-      captionId,
-      payload: {
-        start: finalStart,
-        end: finalStart + originalDuration
-      }
-    })
-  }, [snapEnabled, editCaption])
+  const snap = (t) => Math.round(t / SNAP_UNIT) * SNAP_UNIT
+
+  const clampTime = (t) => Math.max(0, duration > 0 ? Math.min(t, duration) : t)
 
   /**
-   * Called when a block resize finishes
+   * Called when a block drag (move) finishes.
+   * @param {number} captionId
+   * @param {number} newStart  — unclamped/unsnapped new start time
+   * @param {number} originalDuration — in seconds
    */
-  const handleBlockResizeEnd = useCallback((captionId, newStart, newEnd) => {
-    let finalStart = Math.max(0, newStart)
-    let finalEnd = Math.max(finalStart + 0.1, newEnd) // Enforce min duration
+  const handleBlockDragEnd = useCallback((captionId, newStart, originalDuration) => {
+    let s = clampTime(Math.max(0, newStart))
+    if (snapEnabled) s = snap(s)
 
-    if (snapEnabled) {
-      finalStart = snapToTenth(finalStart)
-      finalEnd = Math.max(finalStart + 0.1, snapToTenth(finalEnd))
+    // clamp end to duration as well
+    let e = s + originalDuration
+    if (duration > 0 && e > duration) {
+      e = duration
+      s = Math.max(0, e - originalDuration)
+      if (snapEnabled) s = snap(s)
     }
 
-    editCaption({
-      captionId,
-      payload: {
-        start: finalStart,
-        end: finalEnd
-      }
-    })
-  }, [snapEnabled, editCaption])
+    editCaption({ captionId, payload: { start: s, end: e } })
+  }, [snapEnabled, duration, editCaption])
 
-  return {
-    timeToPx,
-    pxToTime,
-    handleBlockDragEnd,
-    handleBlockResizeEnd
-  }
+  /**
+   * Called when a block resize (edge drag) finishes.
+   * @param {number} captionId
+   * @param {number} newStart
+   * @param {number} newEnd
+   */
+  const handleBlockResizeEnd = useCallback((captionId, newStart, newEnd) => {
+    let s = Math.max(0, newStart)
+    let e = Math.max(s + MIN_DURATION, newEnd)
+
+    if (snapEnabled) {
+      s = snap(s)
+      e = Math.max(s + MIN_DURATION, snap(e))
+    }
+
+    // Clamp to video duration
+    if (duration > 0) {
+      e = Math.min(e, duration)
+      s = Math.min(s, e - MIN_DURATION)
+    }
+
+    editCaption({ captionId, payload: { start: s, end: e } })
+  }, [snapEnabled, duration, editCaption])
+
+  return { timeToPx, pxToTime, handleBlockDragEnd, handleBlockResizeEnd }
 }

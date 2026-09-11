@@ -84,7 +84,7 @@ export function EditorLayout({ project, onExport }) {
               Style
             </div>
           </div>
-          <StylePanel />
+          <StylePanel projectId={project.id} />
         </div>
       </div>
 
